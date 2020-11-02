@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/azulFondo"
+android:orientation="vertical"
+tools:context=".Main2Activity">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/ic_launcher_foreground" />
+
+</RelativeLayout>
+
+<androidx.viewpager.widget.ViewPager
+    android:id="@+id/RV"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="8"/>
+
+<com.google.android.material.tabs.TabLayout
+    android:id="@+id/tablayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/azulFondo"
+    app:tabSelectedTextColor="@android:color/black"
+    app:tabTextColor="@color/Blanco">
+
+    <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Calendario" />
+
+    <com.google.android.material.tabs.TabItem
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Listado" />
+
+</com.google.android.material.tabs.TabLayout>
+
+
+
+
+</LinearLayout>

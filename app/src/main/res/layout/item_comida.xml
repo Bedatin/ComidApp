@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    xmlns:toolsNs="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/carditem"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvComida"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                toolsNs:text="Pechugas"
+                android:textColor="#010"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tvTipo"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                toolsNs:text="Carne"
+                android:textColor="#010"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tvTiempo"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                toolsNs:text="Ambas"
+                android:textColor="#010"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

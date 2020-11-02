@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1014903185795",
+    "firebase_url": "https://comidapp-1fcdc.firebaseio.com",
+    "project_id": "comidapp-1fcdc",
+    "storage_bucket": "comidapp-1fcdc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014903185795:android:85e80ff7e0d6926e0fd6b6",
+        "android_client_info": {
+          "package_name": "com.example.comidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014903185795-b5sd5pjkru973u5kj5m4olpgcgtkhfml.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.comidapp",
+            "certificate_hash": "88a1d0a4386fa3632bd8cd08d7fb4916f0ab8ae6"
+          }
+        },
+        {
+          "client_id": "1014903185795-9a2dct9gofd1ukj3241cmng93e6ack8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD5EB6Q6ZjtwLPf8N7ltBZcMPx3GL6MmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014903185795-9a2dct9gofd1ukj3241cmng93e6ack8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
