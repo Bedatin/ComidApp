@@ -62,17 +62,7 @@
         android:layout_marginTop="90dp"
         android:background="@color/Blanco" />
 
-    <ProgressBar
-        android:id="@+id/progressbar"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:indeterminate="true"
-        android:max="100"
-        android:visibility="visible"
-        android:indeterminateTint="#1a09d6"
-        android:layout_marginTop="-7dp"/>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -81,6 +71,16 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_carta"
+        android:src="@drawable/ic_launcher_foreground" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="200dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_carta"
         android:src="@drawable/ic_launcher_foreground" />

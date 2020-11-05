@@ -2,18 +2,29 @@ package com.example.comidapp.copiaEOI
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.comidapp.Comida
 import com.example.comidapp.DataManager.db
 import com.example.comidapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_add_task.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class AddTaskActivity : AppCompatActivity() {
+
+
+    val comidaRef = Firebase.firestore.collection("comida")
 
     // Referencia a bbdd de firebase
     var mDatabase = FirebaseDatabase.getInstance().reference
@@ -43,8 +54,16 @@ class AddTaskActivity : AppCompatActivity() {
 
 
         btnAddtask.setOnClickListener {
-            createTaskInFirebase()
+            //createTaskInFirebase()
+            val comida = etComida.text.toString()
+            val tipo = etTipo.text.toString()
+            val tiempo = etTiempo.text.toString()
+            val id = comida + tipo + tiempo
+            val comidita = Comida(id, comida, tipo, tiempo.toInt())
+            saveComida(comidita)
+            this.finish()
         }
+
 
     }
 
@@ -68,12 +87,26 @@ class AddTaskActivity : AppCompatActivity() {
             item.id!!
         })*/
         db.collection("Comida").document(item.id!!).set(item)
-            //db.collection("comida").document(item.id!!).update("Comida", item.comida)
-            //db.collection("comida").document(item.id!!).update("Tipo", item.tipo)
-            //db.collection("comida").document(item.id!!).update("Tiempo", item.tiempo)
-            // Cierra la activity
-            this.finish()
+        //db.collection("comida").document(item.id!!).update("Comida", item.comida)
+        //db.collection("comida").document(item.id!!).update("Tipo", item.tipo)
+        //db.collection("comida").document(item.id!!).update("Tiempo", item.tiempo)
+        // Cierra la activity
+        this.finish()
+    }
+
+    fun saveComida(comida: Comida) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            comidaRef.document(comida.id!!).set(comida)
+            /*withContext(Dispatchers.Main) {
+              //  Toast.makeText(this@AddTaskActivity, "OK", Toast.LENGTH_LONG).show()
+            }*/
+        } catch (e: Exception) {
+           /* withContext(Dispatchers.Main) {
+                Toast.makeText(this@AddTaskActivity, e.message, Toast.LENGTH_LONG).show()
+            }*/
         }
     }
+
+}
 
 

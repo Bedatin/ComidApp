@@ -16,7 +16,7 @@ class PageAdapter constructor(
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> return Calendario()
-            1 -> return Listado()
+            1 -> return Listado3()
             else -> return Calendario()
         }
     }

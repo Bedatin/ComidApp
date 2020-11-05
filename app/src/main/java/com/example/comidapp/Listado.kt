@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.comidapp.DataManager.db
 import com.example.comidapp.copiaEOI.AddTaskActivity
 import com.example.comidapp.copiaEOI.TaskViewHolder
 import com.firebase.ui.common.ChangeEventType
@@ -17,6 +18,10 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirestoreRegistrar
+import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_listado.*
 
 class Listado : Fragment() {
@@ -31,6 +36,7 @@ class Listado : Fragment() {
     var comidaLista: ArrayList<Comida> = ArrayList()
 
     var mDatabase = FirebaseDatabase.getInstance().reference
+    var mDatabase2= FirebaseFirestore.getInstance()
     var mAdapter: FirebaseRecyclerAdapter<Comida, TaskViewHolder>? = null
     val taskTable = "Comida"
     val mAuth = FirebaseAuth.getInstance()
@@ -53,7 +59,7 @@ class Listado : Fragment() {
         val taskList = view.findViewById<RecyclerView>(R.id.rvComidas)
         taskList.layoutManager = LinearLayoutManager(context)
 
-        val progressBar = view.findViewById<ProgressBar>(R.id.progressbar)
+        //val progressBar = view.findViewById<ProgressBar>(R.id.progressbar)
 
         val query =
             mDatabase.child(taskTable).orderByKey()
@@ -62,6 +68,7 @@ class Listado : Fragment() {
             .setQuery(query, Comida::class.java)
             .build()
 
+
         // Adapter de firebase
         mAdapter = object : FirebaseRecyclerAdapter<Comida, TaskViewHolder>(options) {
 
@@ -69,7 +76,7 @@ class Listado : Fragment() {
                 super.onDataChanged()
 
                 // Yo tengo un progress bar, y aqui lo escondo porque hay datos :)
-                progressBar.visibility = View.GONE
+               // progressBar.visibility = View.GONE
             }
 
             override fun onChildChanged(type: ChangeEventType, snapshot: DataSnapshot, newIndex: Int, oldIndex: Int) {
