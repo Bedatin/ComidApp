@@ -85,15 +85,4 @@
         android:background="@drawable/btn_carta"
         android:src="@drawable/ic_launcher_foreground" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="300dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_carta"
-        android:src="@color/colorPrimary" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

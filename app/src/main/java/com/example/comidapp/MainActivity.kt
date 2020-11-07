@@ -15,5 +15,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Main2Activity::class.java)
             startActivity(intent)
         }
+
+        btnComida.setOnClickListener {
+            val intent = Intent(this, Main3Activity::class.java)
+            startActivity(intent)
+        }
     }
 }

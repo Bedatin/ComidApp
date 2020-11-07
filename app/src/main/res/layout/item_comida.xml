@@ -8,7 +8,7 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/carditem"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -55,5 +55,5 @@
                 android:background="@color/colorPrimary" />
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
