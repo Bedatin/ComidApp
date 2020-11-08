@@ -3,20 +3,22 @@ package com.example.comidapp
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CalendarAdapder : RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
+class CalendarAdapder2 : RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
 
     var lista: List<Dia> = ArrayList()
     lateinit var context: Context
     var trampa = 50
 
-    fun RecyclerAdapter(series: List<Dia>, context: Context, ancho: Int) {
+    fun RecyclerAdapter(series: List<Dia>, context: Context, ancho:Int) {
         this.lista = series
         this.context = context
         this.trampa = ancho

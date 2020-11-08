@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="50dp"
+    android:layout_width="80dp"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
+    android:id="@+id/item_dia"
     android:orientation="vertical">
 
     <TextView
@@ -16,22 +17,38 @@
         android:textColor="#010"
         android:textSize="13sp" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@color/Negro" />
+
     <TextView
         android:id="@+id/tvComida"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="Bacon en taquitos"
         android:textColor="#010"
         android:textSize="11sp" />
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@color/Negro" />
+
     <TextView
         android:id="@+id/tvCena"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="Bacon en taquitos"
         android:textColor="#010"
         android:textSize="11sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@color/Negro" />
 
 </LinearLayout>

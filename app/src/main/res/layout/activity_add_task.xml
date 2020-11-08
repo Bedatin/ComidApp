@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginBottom="50dp"
         android:padding="30dp">
 
         <EditText
@@ -27,13 +28,30 @@
             android:hint="Tipo"
             android:maxLines="1" />
 
-        <EditText
-            android:id="@+id/etTiempo"
+        <RadioGroup
+            android:id="@+id/rgTiempo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tiempo"
-            android:inputType="phone"
-            android:maxLines="1" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbComida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comida"/>
+            <RadioButton
+                android:id="@+id/rbCena"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cena"/>
+            <RadioButton
+                android:id="@+id/rbAmbas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Ambas"/>
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/btnAddtask"

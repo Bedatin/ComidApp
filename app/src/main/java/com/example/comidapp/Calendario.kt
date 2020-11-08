@@ -65,7 +65,7 @@ class Calendario : Fragment() {
         mRecyclerView = rvSem1
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = LinearLayoutManager(context, OrientationHelper.HORIZONTAL, false)
-        mAdapter.RecyclerAdapter(lista, context!!)
+        mAdapter.RecyclerAdapter(lista, context!!, 2)
         mRecyclerView.adapter = mAdapter
     }
 

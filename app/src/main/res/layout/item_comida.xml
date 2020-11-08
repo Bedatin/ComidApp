@@ -18,44 +18,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:background="@color/Blanco">
 
             <TextView
                 android:id="@+id/tvComida"
-                android:layout_width="75dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 toolsNs:text="Pechugas"
                 android:textColor="#010"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvTipo"
-                android:layout_width="75dp"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 toolsNs:text="Carne"
                 android:textColor="#010"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvTiempo"
-                android:layout_width="75dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 toolsNs:text="Ambas"
                 android:textColor="#010"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/btnDelete"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_margin="10dp"
-                android:background="@color/colorPrimary" />
+                android:background="@drawable/ic_delete" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

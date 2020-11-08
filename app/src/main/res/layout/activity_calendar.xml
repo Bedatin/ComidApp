@@ -21,4 +21,32 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/item_dia"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSem2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_dia"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSem3"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_dia"/>
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_dia"/>
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_dia"/>
+
 </LinearLayout>

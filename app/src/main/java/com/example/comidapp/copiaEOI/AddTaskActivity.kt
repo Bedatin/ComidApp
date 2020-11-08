@@ -40,6 +40,8 @@ class AddTaskActivity : AppCompatActivity() {
     private val TAG = "StorageActivity"
     private val CHOOSING_IMAGE_REQUEST = 1234
 
+    var tiempo2 = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
@@ -51,15 +53,22 @@ class AddTaskActivity : AppCompatActivity() {
 
         imageReference = FirebaseStorage.getInstance().reference.child("images")
 
-
+        rbAmbas.setOnClickListener {
+            tiempo2 = 0
+        }
+        rbComida.setOnClickListener {
+            tiempo2 = 1
+        }
+        rbCena.setOnClickListener {
+            tiempo2 = 2
+        }
 
         btnAddtask.setOnClickListener {
             //createTaskInFirebase()
             val comida = etComida.text.toString()
             val tipo = etTipo.text.toString()
-            val tiempo = etTiempo.text.toString()
-            val id = comida + tipo + tiempo
-            val comidita = Comida(id, comida, tipo, tiempo.toInt())
+            val id = comida + tipo + tiempo2.toString()
+            val comidita = Comida(id, comida, tipo, tiempo2)
             saveComida(comidita)
             this.finish()
         }
@@ -71,10 +80,10 @@ class AddTaskActivity : AppCompatActivity() {
     private fun createTaskInFirebase() {
 
         val item = Comida()
-        item.id = etComida.text.toString() + etTipo.text.toString() + etTiempo.text.toString()
+        item.id = etComida.text.toString() + etTipo.text.toString() + tiempo2.toString()
         item.comida = etComida.text.toString()
         item.tipo = etTipo.text.toString()
-        item.tiempo = etTiempo.text.toString().toInt()
+        item.tiempo = tiempo2
 
 
         // Creamos una tarea en la tabla y nos dará una id única
@@ -86,7 +95,7 @@ class AddTaskActivity : AppCompatActivity() {
         /*db.collection("comida").add({
             item.id!!
         })*/
-        db.collection("Comida").document(item.id!!).set(item)
+        db.collection("Comida").document(item.id).set(item)
         //db.collection("comida").document(item.id!!).update("Comida", item.comida)
         //db.collection("comida").document(item.id!!).update("Tipo", item.tipo)
         //db.collection("comida").document(item.id!!).update("Tiempo", item.tiempo)
@@ -96,7 +105,7 @@ class AddTaskActivity : AppCompatActivity() {
 
     fun saveComida(comida: Comida) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            comidaRef.document(comida.id!!).set(comida)
+            comidaRef.document(comida.id).set(comida)
             /*withContext(Dispatchers.Main) {
               //  Toast.makeText(this@AddTaskActivity, "OK", Toast.LENGTH_LONG).show()
             }*/

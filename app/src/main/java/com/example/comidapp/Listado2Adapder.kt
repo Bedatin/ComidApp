@@ -1,6 +1,7 @@
 package com.example.comidapp
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -45,10 +46,15 @@ class Listado2Adapder (var listaEntrada: ArrayList<Comida>): RecyclerView.Adapte
 
 
 
+        @SuppressLint("SetTextI18n")
         fun bind(listita: Comida) {
             tvComida.text = listita.comida
             tvTipo.text = listita.tipo
-            tvTiempo.text = listita.tiempo.toString()
+            when (listita.tiempo) {
+                1 -> tvTiempo.text = "Comida"
+                2 -> tvTiempo.text = "Cena"
+                else -> tvTiempo.text = "Ambas"
+            }
         }
     }
 

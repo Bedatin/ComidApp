@@ -39,7 +39,7 @@ class ListadoActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         bajaComida2()
-        fab.setOnClickListener {
+        btnAdd.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             startActivity(intent)
         }

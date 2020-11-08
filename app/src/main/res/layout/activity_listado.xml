@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulSplash"
+    android:background="@color/azulFondo"
     android:orientation="vertical"
     tools:context=".toolbarActivities.ListadoActivity">
 
@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/arriba"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:background="@color/azulFondo"
             android:gravity="center"
             android:orientation="horizontal"
@@ -31,36 +31,41 @@
             <Button
                 android:id="@+id/btnComida"
                 android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_carta"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorCuadroClaro"
                 android:text="Comdida"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnTipo"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_carta"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/colorCuadroClaro"
                 android:text="Tipo"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnTiempo"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_carta"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/colorCuadroClaro"
                 android:text="Tiempo"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
 
-            <Button
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/btn_carta"
-                android:text="+/-"
-                android:textColor="@color/Blanco" />
+            <ImageButton
+                android:id="@+id/btnAdd"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:background="@color/Blanco"
+                android:src="@drawable/ic_add_box"
+                />
 
         </LinearLayout>
 
@@ -72,17 +77,6 @@
             app:layout_constraintTop_toBottomOf="@id/arriba"
             tools:listitem="@layout/item_comida" />
 
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/btn_carta"
-            android:src="@drawable/ic_launcher_foreground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab2"
