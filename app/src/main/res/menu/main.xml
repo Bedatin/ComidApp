@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        app:showAsAction="always"
+        android:id="@+id/app_bar_search"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:id="@+id/action_add"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom"
+        android:title="Add">
+    </item>
+    <item
+        android:icon="@android:drawable/ic_menu_delete"
+        android:id="@+id/calendario"
+        app:showAsAction="ifRoom"
+        android:title="Calendario">
+    </item>
+    <item
+        android:icon="@android:drawable/ic_menu_delete"
+        android:id="@+id/listado"
+        app:showAsAction="ifRoom"
+        android:title="Listado">
+    </item>
+    <item
+        android:icon="@android:drawable/ic_menu_save"
+        android:id="@+id/reglas"
+        app:showAsAction="ifRoom"
+        android:title="Reglas">
+    </item>
+
+</menu>

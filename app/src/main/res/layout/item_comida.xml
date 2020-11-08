@@ -6,16 +6,19 @@
     android:clickable="true"
     android:focusable="true"
     android:gravity="center"
+    android:background="@color/Blanco"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/carditem"
         android:layout_width="match_parent"
+        android:background="@color/Blanco"
         android:layout_height="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/Blanco">
 
             <TextView
                 android:id="@+id/tvComida"

@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main3Activity"></activity>
+        <activity android:name=".toolbarActivities.ReglasActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity android:name=".toolbarActivities.ListadoActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".toolbarActivities.CalendarActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Main3Activity" />
         <activity android:name=".Main2Activity" />
         <activity android:name=".copiaEOI.AddTaskActivity" />
         <activity android:name=".MainActivity">

@@ -8,19 +8,12 @@ android:background="@color/azulFondo"
 android:orientation="vertical"
 tools:context=".Main2Activity">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="5dp"
-        android:background="@drawable/ic_launcher_foreground" />
-
-</RelativeLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:theme="@style/Toolbar" />
 
 <androidx.viewpager.widget.ViewPager
     android:id="@+id/RV"
