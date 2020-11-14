@@ -12,10 +12,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnCalendar.setOnClickListener {
-            val intent = Intent(this, Main2Activity::class.java)
-            startActivity(intent)
-        }
 
         btnComida.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java)

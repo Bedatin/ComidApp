@@ -12,13 +12,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CalendarAdapder2 : RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
+class CalendarAdapder2(var onDiaClick: (dia: Dia) -> Unit) :
+    RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
 
     var lista: List<Dia> = ArrayList()
     lateinit var context: Context
     var trampa = 50
 
-    fun RecyclerAdapter(series: List<Dia>, context: Context, ancho:Int) {
+    fun RecyclerAdapter(series: List<Dia>, context: Context, ancho: Int) {
         this.lista = series
         this.context = context
         this.trampa = ancho
@@ -26,7 +27,7 @@ class CalendarAdapder2 : RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.bind(item, trampa)
+        holder.bind(item, trampa, item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,7 +39,7 @@ class CalendarAdapder2 : RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
         return lista.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @SuppressLint("WrongViewCast")
         val tvDia = view.findViewById(R.id.tvDia) as TextView
         val tvComida = view.findViewById(R.id.tvComida) as TextView
@@ -46,11 +47,14 @@ class CalendarAdapder2 : RecyclerView.Adapter<CalendarAdapder2.ViewHolder>() {
         val cuadro = view.findViewById(R.id.item_dia) as LinearLayout
 
 
-        fun bind(listita: Dia, trampita: Int) {
+        fun bind(listita: Dia, trampita: Int, item: Dia) {
             tvDia.text = listita.dia
             tvComida.text = listita.comida
             tvCena.text = listita.cena
             cuadro.layoutParams.width = trampita
+            itemView.setOnClickListener {
+                onDiaClick(item)
+            }
         }
     }
 

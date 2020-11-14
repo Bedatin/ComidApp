@@ -6,6 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/item_dia"
+    android:background="@drawable/recuadro_negro"
     android:orientation="vertical">
 
     <TextView
@@ -33,9 +34,9 @@
 
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="50dp"
         android:layout_height="2dp"
-        android:src="@color/Negro" />
+        android:src="@color/colorBtnLetra" />
 
     <TextView
         android:id="@+id/tvCena"

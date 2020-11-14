@@ -6,42 +6,15 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@color/azulFondo"
 android:orientation="vertical"
+    android:gravity="center"
 tools:context=".Main2Activity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="parent"
+    <Button
+        android:id="@+id/btn"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:theme="@style/Toolbar" />
-
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/RV"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="8"/>
-
-<com.google.android.material.tabs.TabLayout
-    android:id="@+id/tablayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/azulFondo"
-    app:tabSelectedTextColor="@android:color/black"
-    app:tabTextColor="@color/Blanco">
-
-    <com.google.android.material.tabs.TabItem
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Calendario" />
-
-    <com.google.android.material.tabs.TabItem
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Listado" />
-
-</com.google.android.material.tabs.TabLayout>
-
-
-
+        android:layout_height="50dp"
+        android:scrollbars="vertical"
+        android:text="boton 1"
+        tools:listitem="@layout/item_dia"/>
 
 </LinearLayout>

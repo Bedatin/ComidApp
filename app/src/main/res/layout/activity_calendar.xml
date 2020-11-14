@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
+    android:layout_gravity="center"
     tools:context=".toolbarActivities.CalendarActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -33,20 +34,25 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:scrollbars="vertical"
+        android:layout_marginStart="0dp"
         tools:listitem="@layout/item_dia"/>
 
     <Button
-        android:id="@+id/btn"
+        android:id="@+id/btnActu"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/item_dia"/>
+        android:text="Actu"/>
 
     <Button
-        android:id="@+id/btn2"
+        android:id="@+id/btnGen1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/item_dia"/>
+        android:text="Gen1" />
+
+    <Button
+        android:id="@+id/color"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/Negro"/>
 
 </LinearLayout>

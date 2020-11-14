@@ -43,6 +43,7 @@ class Calendario : Fragment() {
         for (i in 0..6){
             if(Calendar.DAY_OF_WEEK == i+1){
                 val ar1 = Dia(
+                    "",
                     "hoy",
                     "pechuga",
                     "alitas"
@@ -51,6 +52,7 @@ class Calendario : Fragment() {
             }
             else {
                 val ar1 = Dia(
+                    "",
                     semana[i],
                     "pechuga",
                     "alitas"
