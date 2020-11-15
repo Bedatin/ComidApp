@@ -8,6 +8,15 @@
     android:orientation="vertical"
     tools:context=".toolbarActivities.DiaInfo">
 
+    <TextView
+        android:id="@+id/tvDia"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Lunes"
+        android:textColor="#010"
+        android:textSize="15sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,14 +31,6 @@
             android:textColor="#010"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tvDia"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Lunes"
-            android:textColor="#010"
-            android:textSize="15sp" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -77,14 +78,6 @@
             android:textColor="#010"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/etDia"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Lunes"
-            android:textColor="#010"
-            android:textSize="15sp" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -118,7 +111,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn"
+        android:id="@+id/btnSubeCambio"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="boton 1" />

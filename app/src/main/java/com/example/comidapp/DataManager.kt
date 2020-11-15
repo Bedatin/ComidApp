@@ -22,12 +22,12 @@ object DataManager {
 
     //Funciones
 
-    /*fun createUser(name:String?, email:String?) {
+    fun createUser(name:String, email:String) {
         val uid = auth.currentUser!!.uid
-        val newUser = Usuario(name,email)
-        db.collection("people").document(uid).set(newUser)
+        val newUser = User(name,email)
+        db.collection("people").document(email).set(newUser)
 
-    }*/
+    }
 
     fun getUsers()  {
         var name = ""

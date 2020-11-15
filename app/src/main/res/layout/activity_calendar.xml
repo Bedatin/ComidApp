@@ -55,4 +55,12 @@
         android:layout_height="50dp"
         android:background="@color/Negro"/>
 
+    <Button
+        android:id="@+id/btnNoti"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:text="Notifica"
+        android:background="@drawable/btn_carta"/>
+
 </LinearLayout>

@@ -13,8 +13,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        btnComida.setOnClickListener {
+        btnCalendar.setOnClickListener {
             val intent = Intent(this, CalendarActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnLogin.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 

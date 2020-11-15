@@ -2,14 +2,17 @@ package com.example.comidapp.toolbarActivities
 
 
 import android.annotation.SuppressLint
+import android.app.*
+import android.content.Context
 import android.content.Intent
-import android.icu.util.LocaleData
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
+import android.os.Message
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -17,15 +20,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.*
-import com.google.api.SystemParameters
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_calendar.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.text.DateFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -33,18 +37,18 @@ import java.util.*
 class CalendarActivity : AppCompatActivity() {
 
     lateinit var mRecyclerView: RecyclerView
-    val mAdapter: CalendarAdapder = CalendarAdapder()
+    lateinit var mAdapter: CalendarAdapder
     lateinit var mRecyclerView2: RecyclerView
     lateinit var mAdapter2: CalendarAdapder2
     var listita: ArrayList<Dia> = ArrayList()
     var semana = arrayListOf<String>(
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-        "Domingo"
+        "L",
+        "M",
+        "X",
+        "J",
+        "V",
+        "S",
+        "D"
     )
     var semanaInglesa = arrayListOf<String>(
         "MONDAY",
@@ -66,7 +70,7 @@ class CalendarActivity : AppCompatActivity() {
 
     var muestra: ArrayList<Comida> = ArrayList()
 
-    val arrayDocs = arrayListOf<String>()
+    val arrayDocsCom = arrayListOf<String>()
     val arrayCom = arrayListOf<Comida>()
 
     val arrayDocsDias = arrayListOf<String>()
@@ -79,6 +83,16 @@ class CalendarActivity : AppCompatActivity() {
     var actu = false
     var actuDia = false
 
+    lateinit var notificationManager: NotificationManager
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: Notification.Builder
+    private val channelId = "package com.example.comidapp.toolbarActivities"
+    private val description = "Test notification"
+
+    private val channelIdGroup = "Maison"
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
@@ -87,20 +101,21 @@ class CalendarActivity : AppCompatActivity() {
         trampa = windowManager.defaultDisplay.width / 4
         trampa2 = windowManager.defaultDisplay.width / 4
 
+        bajaComida()
         bajaDias()
-        bajaComida2()
-        Handler().postDelayed({
-            color.setBackgroundResource(R.color.amarillo)
-        }, 4000)
+
 
         btnActu.setOnClickListener {
-            if (!actu) {
+            if (!actu && semanaza.size != 0) {
+                llenaArray2()
                 setUpRecyclerView(sem1, rvSem2)
                 setUpRecyclerView2(sem2, rvSem3)
                 actu = true
+                btnActu.text = "Baja"
             } else {
+                btnActu.isClickable = false
                 actu = false
-                bajaComida2()
+                bajaComida()
                 bajaDias()
                 /*val intent = Intent(this, Main2Activity::class.java)
                 startActivity(intent)*/
@@ -109,19 +124,50 @@ class CalendarActivity : AppCompatActivity() {
 
         btnGen1.setOnClickListener {
             llenaArray()
-            for (i in 0 until listita.size) {
-                val diita =
-                    Dia(listita[i].fecha, listita[i].dia, listita[i].comida, listita[i].cena)
-                saveComida(diita)
-            }
+
         }
 
-        color.setOnClickListener {
-            try {
-                Log.i("dias", sem1[0].dia + sem1[1].dia + sem1[2].dia + sem1[3].dia)
-            } catch (e: Exception) {
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            }
+        color.setOnClickListener {
+            val intent = Intent(this, CalendarActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+            val contentView = RemoteViews(packageName, R.layout.notification_layout)
+            contentView.setTextViewText(R.id.tvNotTitle, "Comidas")
+            contentView.setTextViewText(R.id.tvNotContent, "Alguien ha cambiado el calendario")
+
+
+            notificationChannel =
+                NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.MAGENTA
+            notificationChannel.enableVibration(false)
+            notificationManager.createNotificationChannel(notificationChannel)
+            notificationManager.createNotificationChannelGroup(NotificationChannelGroup(channelIdGroup, "Maison"))
+
+            builder = Notification.Builder(this, channelId)
+                //.setContentTitle("ComidApp")
+                //.setContentText("hola")
+                .setContent(contentView)
+                .setSmallIcon(R.drawable.btn_carta)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.btn_carta))
+                .setContentIntent(pendingIntent)
+                .setGroup("Maison")
+
+
+            /*val topic = "highScores"
+
+            val message: Message = Message.builder()
+                .putData("score", "850")
+                .putData("time", "2:45")
+                .setTopic(topic)
+                .build()*/
+
+            notificationManager.notify(1234, builder.build())
+
+            notification()
+
         }
     }
 
@@ -160,8 +206,9 @@ class CalendarActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_add -> {
-                sem1.addAll(arrayDias)
-                Log.i("dias", sem1[0].dia + sem1[1].dia + sem1[2].dia + sem1[3].dia)
+                llenaArray2()
+                /*sem1.addAll(arrayDias)
+                Log.i("dias", sem1[0].dia + sem1[1].dia + sem1[2].dia + sem1[3].dia)*/
                 setUpRecyclerView(sem1, rvSem2)
                 setUpRecyclerView2(sem2, rvSem3)
             }
@@ -186,6 +233,14 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView = RV
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+        mAdapter = CalendarAdapder {
+            val intent = Intent(this, DiaInfo::class.java)
+            intent.putExtra("fecha", it.fecha)
+            intent.putExtra("dia", it.dia)
+            intent.putExtra("comida", it.comida)
+            intent.putExtra("cena", it.cena)
+            startActivity(intent)
+        }
         mAdapter.RecyclerAdapter(lista, this, trampa)
         mRecyclerView.adapter = mAdapter
     }
@@ -198,6 +253,7 @@ class CalendarActivity : AppCompatActivity() {
             LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter2 = CalendarAdapder2 {
             val intent = Intent(this, DiaInfo::class.java)
+            intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
@@ -207,51 +263,50 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView2.adapter = mAdapter2
     }
 
-    fun bajaComida2() = CoroutineScope(Dispatchers.IO).launch {
-        arrayDocs.clear()
+    fun bajaComida() = CoroutineScope(Dispatchers.IO).launch {
+        arrayDocsCom.clear()
         arrayCom.clear()
         val querySnapshot = comidaRef.get().await()
         for (document in querySnapshot.documents) {
-            val a = document.id
-            Log.i("myapp", a)
-            arrayDocs.add(a)
+            arrayDocsCom.add(document.id)
         }
-        bajaComida3()
+        bajaComida2()
     }
 
-    fun bajaComida3() {
+    fun bajaComida2() {
         muestra.clear()
-        for (i in 0 until arrayDocs.size) {
-            DataManager.db.collection("comida").document(arrayDocs[i]).get()
+        for (i in 0 until arrayDocsCom.size) {
+            DataManager.db.collection("comida").document(arrayDocsCom[i]).get()
                 .addOnSuccessListener { result ->
                     val a1 = result.get("id").toString()
                     val a2 = result.get("comida").toString()
                     val a3 = result.get("tipo").toString()
                     val a4 = result.get("tiempo").toString().toInt()
                     val af = Comida(a1, a2, a3, a4)
-                    Log.i("myapp", "$a1 $a2 $a3 $a4, ${af.id}")
                     arrayCom.add(af)
                 }
-
         }
-        muestra = arrayCom
+        try {
+            muestra = arrayCom
+        } catch (e: Exception) {
+        }
+
     }
 
     fun bajaDias() = CoroutineScope(Dispatchers.IO).launch {
+        btnActu.text = "Bajando"
         arrayDocsDias.clear()
         arrayDias.clear()
         val querySnapshot = diaRef.get().await()
         for (document in querySnapshot.documents) {
-            val a = document.id
-            Log.i("dias", a)
-            arrayDocsDias.add(a)
+            arrayDocsDias.add(document.id)
         }
         bajaDias2()
     }
 
-    fun bajaDias2() {
-        sem1.clear()
-        sem2.clear()
+    fun bajaDias2() = CoroutineScope(Dispatchers.IO).launch {
+        var ordena: List<Dia> = arrayListOf()
+        semanaza.clear()
         for (i in 0 until arrayDocsDias.size) {
             DataManager.db.collection("Dia").document(arrayDocsDias[i]).get()
                 .addOnSuccessListener { result ->
@@ -259,13 +314,24 @@ class CalendarActivity : AppCompatActivity() {
                     val a2 = result.get("dia").toString()
                     val a3 = result.get("comida").toString()
                     val a4 = result.get("cena").toString()
+                    Log.i("dias", "dia $a2")
                     val af = Dia(a1, a2, a3, a4)
                     arrayDias.add(af)
-                }
+                    Log.i("dias", "array1 ${af.dia}")
 
+                }.await()
         }
-        arrayDias.sortBy { it.fecha }
-        sem1.addAll(arrayDias)
+        try {
+            ordena = arrayDias.sortedBy { it.fecha }
+            semanaza.addAll(ordena)
+            Log.i("dias", "array2 ${semanaza[0].dia}")
+        } catch (e: Exception) {
+        }
+        color.setBackgroundResource(R.color.amarillo)
+        btnActu.isClickable = true
+        btnActu.text = "Pinta"
+
+
         /*for (i in 0..3) {
             sem1.add(arrayDias[i])
             Log.i("dias", sem1[i].toString())
@@ -275,7 +341,7 @@ class CalendarActivity : AppCompatActivity() {
         }*/
     }
 
-    fun getArticulos() {
+    fun generaComida() {
         listita.clear()
         for (i in 0..6) {
             val a = (0 until muestra.size).random()
@@ -288,7 +354,7 @@ class CalendarActivity : AppCompatActivity() {
                 }
             } while (b)
             val ar1 = Dia(
-                LocalDate.now().plusDays((1 + i - 6).toLong()).toString(),
+                LocalDate.now().plusDays((i - 6).toLong()).toString(),
                 semana[i],
                 muestra[a].comida,
                 muestra[c].comida
@@ -300,7 +366,7 @@ class CalendarActivity : AppCompatActivity() {
     fun llenaArray() {
         sem1.clear()
         sem2.clear()
-        getArticulos()
+        generaComida()
         sem1.add(listita[0])
         sem1.add(listita[1])
         sem1.add(listita[2])
@@ -308,14 +374,48 @@ class CalendarActivity : AppCompatActivity() {
         sem2.add(listita[4])
         sem2.add(listita[5])
         sem2.add(listita[6])
+        for (i in 0 until listita.size) {
+            val diita =
+                Dia(listita[i].fecha, listita[i].dia, listita[i].comida, listita[i].cena)
+            saveComida(diita)
+        }
+        setUpRecyclerView(sem1, rvSem2)
+        setUpRecyclerView2(sem2, rvSem3)
+    }
+
+    fun llenaArray2() {
+        sem1.clear()
+        sem2.clear()
+        if (semanaza.size != 0) {
+            Log.i("dias", semanaza.toString())
+            sem1.add(semanaza[0])
+            sem1.add(semanaza[1])
+            sem1.add(semanaza[2])
+            sem1.add(semanaza[3])
+            sem2.add(semanaza[4])
+            sem2.add(semanaza[5])
+            sem2.add(semanaza[6])
+
+        }
+        if (muestra.size != 0) {
+            Log.i("dias", muestra.toString())
+        }
+
     }
 
     fun saveComida(dia: Dia) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            diaRef.document(dia.dia).set(dia)
+            diaRef.document(dia.fecha).set(dia)
         } catch (e: Exception) {
             Toast.makeText(this@CalendarActivity, e.message, Toast.LENGTH_LONG).show()
         }
     }
 
+    fun notification(){
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener{
+            it.result?.token?.let{
+                Log.i("fire", it)
+            }
+        }
+    }
 }

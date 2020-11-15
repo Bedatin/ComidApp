@@ -10,7 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CalendarAdapder : RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
+class CalendarAdapder(var onDiaClick: (dia: Dia) -> Unit) :
+    RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
 
     var lista: List<Dia> = ArrayList()
     lateinit var context: Context
@@ -24,7 +25,7 @@ class CalendarAdapder : RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.bind(item, trampa)
+        holder.bind(item, trampa, item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +37,7 @@ class CalendarAdapder : RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
         return lista.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         @SuppressLint("WrongViewCast")
         val tvDia = view.findViewById(R.id.tvDia) as TextView
         val tvComida = view.findViewById(R.id.tvComida) as TextView
@@ -44,11 +45,18 @@ class CalendarAdapder : RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
         val cuadro = view.findViewById(R.id.item_dia) as LinearLayout
 
 
-        fun bind(listita: Dia, trampita: Int) {
-            tvDia.text = listita.dia
+        @SuppressLint("SetTextI18n")
+        fun bind(listita: Dia, trampita: Int, item: Dia) {
+            val num = listita.fecha
+            val num1 = num.substring(8,10)
+            val num2 = num.substring(5,7)
+            tvDia.text = "${listita.dia} $num1/$num2"
             tvComida.text = listita.comida
             tvCena.text = listita.cena
             cuadro.layoutParams.width = trampita
+            itemView.setOnClickListener {
+                onDiaClick(item)
+            }
         }
     }
 

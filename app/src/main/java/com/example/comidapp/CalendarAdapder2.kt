@@ -3,11 +3,9 @@ package com.example.comidapp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -47,8 +45,12 @@ class CalendarAdapder2(var onDiaClick: (dia: Dia) -> Unit) :
         val cuadro = view.findViewById(R.id.item_dia) as LinearLayout
 
 
+        @SuppressLint("SetTextI18n")
         fun bind(listita: Dia, trampita: Int, item: Dia) {
-            tvDia.text = listita.dia
+            val num = listita.fecha
+            val num1 = num.substring(8,10)
+            val num2 = num.substring(5,7)
+            tvDia.text = "${listita.dia} $num1/$num2"
             tvComida.text = listita.comida
             tvCena.text = listita.cena
             cuadro.layoutParams.width = trampita
