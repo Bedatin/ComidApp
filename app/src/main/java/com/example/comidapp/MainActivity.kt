@@ -23,6 +23,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnToque.setOnClickListener {
+            val intent = Intent(this, MensajeActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 }

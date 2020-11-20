@@ -43,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
     private var mDatabase: FirebaseDatabase? = null
     private var mAuth: FirebaseAuth? = null
 
+    private var token:String = ""
+
 
     val RC_SIGN_IN = 1234
     val TAG = "myapp"
@@ -56,17 +58,6 @@ class LoginActivity : AppCompatActivity() {
 
         tvRegistro.text = "Inicia sesion"
         auth = FirebaseAuth.getInstance()
-        //DataManager.getUsers()
-
-
-        /*if (auth.currentUser?.uid != null) {
-            tvRegistro.text = "Sesion iniciada"
-            btnDelete.setOnClickListener {
-                tvRegistro.text = "Inicia sesion"
-                DataManager.deleteUser()
-                //auth.currentUser?.uid = null
-            }
-        }*/
 
         btnDelete.setOnClickListener {
             if (auth.currentUser?.uid != null) {
@@ -81,41 +72,10 @@ class LoginActivity : AppCompatActivity() {
 
         callbackManager = CallbackManager.Factory.create()
 
-        /*buttonFacebookLogin.setReadPermissions("email", "public_profile")
-        buttonFacebookLogin.registerCallback(callbackManager, object :
-            FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                Log.d(TAG, "facebook:onSuccess:$loginResult")
-                handleFacebookAccessToken(loginResult.accessToken)
-                val user = FirebaseAuth.getInstance().currentUser
-                user?.let {
-                    for (profile in it.providerData) {
-                        val name = profile.displayName
-                        val email = profile.email
-                        DataManager.createUser(name!!,email!!)
-                    }
-                }
-                tvRegistro.text = "Sesion iniciada"
-            }
-
-            override fun onCancel() {
-                Log.d(TAG, "facebook:onCancel")
-                // ...
-            }
-
-            override fun onError(error: FacebookException) {
-                Log.d(TAG, "facebook:onError", error)
-                // ...
-            }
-        })*/
-
         sign_in_button.setOnClickListener {
             signIn()
         }
-        notification()
-        /*delete.setOnClickListener {
-            DataManager.deleteUser()
-        }*/
+
 
     }
 
@@ -159,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
                         for (profile in it.providerData) {
                             val name = profile.displayName
                             val email = profile.email
-                            DataManager.createUser(name!!, email!!)
+                            DataManager.createUser(name!!, email!!, token)
                         }
                     }
                     // Sign in success, update UI with the signed-in user's information
@@ -174,38 +134,9 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    /*private fun handleFacebookAccessToken(token: AccessToken) {
-        Log.d(TAG, "handleFacebookAccessToken:$token")
-
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
-                    val user = FirebaseAuth.getInstance().currentUser
-                    user?.let {
-                        for (profile in it.providerData) {
-                            val name = profile.displayName
-                            val email = profile.email
-                            DataManager.createUser(name,email)
-                        }
-                    }
-                    tvRegistro.text = "Sesion iniciada"
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    Toast.makeText(
-                        baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                // ...
-            }
-    }*/
 
     private fun initialise() {
+        notification()
 
         etEmail = findViewById<View>(R.id.et_email) as EditText
         etPassword = findViewById<View>(R.id.et_password) as EditText
@@ -232,7 +163,7 @@ class LoginActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         val userId = mAuth!!.currentUser!!.uid
-                        DataManager.createUser(name!!, email!!)
+                        DataManager.createUser(name!!, email!!, token)
                         tvRegistro.text = "Sesion iniciada"
                         et_name.text.clear()
                         et_email.text.clear()
@@ -259,12 +190,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun notification() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
+        /*FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
             it.result?.token?.let {
                 Log.i("fire", it)
             }
+        }*/
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+            token = it.token
         }
-
         FirebaseMessaging.getInstance().subscribeToTopic("Maison")
     }
 

@@ -22,9 +22,9 @@ object DataManager {
 
     //Funciones
 
-    fun createUser(name:String, email:String) {
+    fun createUser(name:String, email:String, token:String) {
         val uid = auth.currentUser!!.uid
-        val newUser = User(name,email)
+        val newUser = User(name,email, token)
         db.collection("people").document(email).set(newUser)
 
     }
