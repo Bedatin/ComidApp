@@ -5,4 +5,4 @@ class Comida (
     var comida: String ="",
     var tipo: String ="",
     var tiempo: Int =0
-        ){}
+        )
