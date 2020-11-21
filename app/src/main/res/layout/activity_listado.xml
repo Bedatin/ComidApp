@@ -33,7 +33,7 @@
                 android:layout_width="100dp"
                 android:layout_margin="10dp"
                 android:layout_height="wrap_content"
-                android:background="@color/colorCuadroClaro"
+                android:background="@color/verdeClaro"
                 android:text="Comdida"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
@@ -43,7 +43,7 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@color/colorCuadroClaro"
+                android:background="@color/verdeClaro"
                 android:text="Tipo"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
@@ -53,7 +53,7 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@color/colorCuadroClaro"
+                android:background="@color/verdeClaro"
                 android:text="Tiempo"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />

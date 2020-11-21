@@ -5,14 +5,10 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Message
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -20,10 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.*
+import com.example.comidapp.calendarAdapters.CalendarAdapder
+import com.example.comidapp.calendarAdapters.CalendarAdapder2
+import com.example.comidapp.calendarAdapters.CalendarAdapder3
+import com.example.comidapp.calendarAdapters.CalendarAdapder4
+import com.example.comidapp.notifications.NotificationData
+import com.example.comidapp.notifications.PushNotification
+import com.example.comidapp.notifications.RetrofitInstance
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_calendar.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,14 +34,25 @@ import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.util.*
 
+const val TOPIC = "/topics/Maison"
 
 @Suppress("DEPRECATION")
 class CalendarActivity : AppCompatActivity() {
 
+    val TAG = "myApp"
+
+    //Reciclers
     lateinit var mRecyclerView: RecyclerView
     lateinit var mAdapter: CalendarAdapder
     lateinit var mRecyclerView2: RecyclerView
     lateinit var mAdapter2: CalendarAdapder2
+    lateinit var mRecyclerView3: RecyclerView
+    lateinit var mAdapter3: CalendarAdapder3
+    lateinit var mRecyclerView4: RecyclerView
+    lateinit var mAdapter4: CalendarAdapder4
+
+
+
     var listita: ArrayList<Dia> = ArrayList()
     var semana = arrayListOf<String>(
         "L",
@@ -65,6 +78,7 @@ class CalendarActivity : AppCompatActivity() {
     var sem2: ArrayList<Dia> = arrayListOf()
     var semanaza: ArrayList<Dia> = arrayListOf()
 
+    //Trampas
     var trampa = 50
     var trampa2 = 50
 
@@ -83,15 +97,11 @@ class CalendarActivity : AppCompatActivity() {
     var actu = false
     var actuDia = false
 
+    //Notificaciones
+    var usuario = "Alguien"
+    var id = ""
+
     lateinit var notificationManager: NotificationManager
-    lateinit var notificationChannel: NotificationChannel
-    lateinit var builder: Notification.Builder
-    private val channelId = "package com.example.comidapp.toolbarActivities"
-    private val description = "Test notification"
-
-    private val channelIdGroup = "Maison"
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,8 +118,8 @@ class CalendarActivity : AppCompatActivity() {
         btnActu.setOnClickListener {
             if (!actu && semanaza.size != 0) {
                 llenaArray2()
-                setUpRecyclerView(sem1, rvSem2)
-                setUpRecyclerView2(sem2, rvSem3)
+                setUpRecyclerView(sem1, rvSem1)
+                setUpRecyclerView2(sem2, rvSem2)
                 actu = true
                 btnActu.text = "Baja"
             } else {
@@ -129,44 +139,30 @@ class CalendarActivity : AppCompatActivity() {
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        color.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val contentView = RemoteViews(packageName, R.layout.notification_layout)
-            contentView.setTextViewText(R.id.tvNotTitle, "Comidas")
-            contentView.setTextViewText(R.id.tvNotContent, "Alguien ha cambiado el calendario")
+        btnNoti.setOnClickListener {
+            val title = "Maison"
+            //val id = FirebaseAuth.getInstance().tenantId!!
+            bajaShared()
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    DataManager.db.collection("people").document(id).get()
+                        .addOnSuccessListener { result ->
+                            usuario = result.get("name").toString()
+                            Log.i(TAG, usuario)
+                        }.await()
+                } catch (e: Exception) {
+                    Log.i(TAG, "No pilla el nombre")
+                }
+                val message = "$usuario ha actualizado el calendario"
+                PushNotification(
+                    NotificationData(title, message),
+                    TOPIC
+                ).also {
+                    sendNotification(it)
+                }
+            }
 
-
-            notificationChannel =
-                NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.MAGENTA
-            notificationChannel.enableVibration(false)
-            notificationManager.createNotificationChannel(notificationChannel)
-            notificationManager.createNotificationChannelGroup(NotificationChannelGroup(channelIdGroup, "Maison"))
-
-            builder = Notification.Builder(this, channelId)
-                //.setContentTitle("ComidApp")
-                //.setContentText("hola")
-                .setContent(contentView)
-                .setSmallIcon(R.drawable.btn_carta)
-                .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.btn_carta))
-                .setContentIntent(pendingIntent)
-                .setGroup("Maison")
-
-
-            /*val topic = "highScores"
-
-            val message: Message = Message.builder()
-                .putData("score", "850")
-                .putData("time", "2:45")
-                .setTopic(topic)
-                .build()*/
-
-            notificationManager.notify(1234, builder.build())
-
-            notification()
 
         }
     }
@@ -203,14 +199,17 @@ class CalendarActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    @SuppressLint("ResourceType")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_add -> {
                 llenaArray2()
                 /*sem1.addAll(arrayDias)
                 Log.i("dias", sem1[0].dia + sem1[1].dia + sem1[2].dia + sem1[3].dia)*/
-                setUpRecyclerView(sem1, rvSem2)
-                setUpRecyclerView2(sem2, rvSem3)
+                setUpRecyclerView(sem1, rvSem1)
+                setUpRecyclerView2(sem2, rvSem2)
+                setUpRecyclerView3(sem1, rvSem3)
+                setUpRecyclerView4(sem2, rvSem4)
             }
             R.id.calendario -> {
                 val intent = Intent(this, CalendarActivity::class.java)
@@ -261,6 +260,42 @@ class CalendarActivity : AppCompatActivity() {
         }
         mAdapter2.RecyclerAdapter(lista, this, trampa2)
         mRecyclerView2.adapter = mAdapter2
+    }
+
+    @SuppressLint("WrongConstant")
+    fun setUpRecyclerView3(lista: List<Dia>, RV: RecyclerView) {
+        mRecyclerView3 = RV
+        mRecyclerView3.setHasFixedSize(true)
+        mRecyclerView3.layoutManager =
+            LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+        mAdapter3 = CalendarAdapder3 {
+            val intent = Intent(this, DiaInfo::class.java)
+            intent.putExtra("fecha", it.fecha)
+            intent.putExtra("dia", it.dia)
+            intent.putExtra("comida", it.comida)
+            intent.putExtra("cena", it.cena)
+            startActivity(intent)
+        }
+        mAdapter3.RecyclerAdapter(lista, this, trampa)
+        mRecyclerView3.adapter = mAdapter3
+    }
+
+    @SuppressLint("WrongConstant")
+    fun setUpRecyclerView4(lista: List<Dia>, RV: RecyclerView) {
+        mRecyclerView4 = RV
+        mRecyclerView4.setHasFixedSize(true)
+        mRecyclerView4.layoutManager =
+            LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+        mAdapter4 = CalendarAdapder4 {
+            val intent = Intent(this, DiaInfo::class.java)
+            intent.putExtra("fecha", it.fecha)
+            intent.putExtra("dia", it.dia)
+            intent.putExtra("comida", it.comida)
+            intent.putExtra("cena", it.cena)
+            startActivity(intent)
+        }
+        mAdapter4.RecyclerAdapter(lista, this, trampa2)
+        mRecyclerView4.adapter = mAdapter4
     }
 
     fun bajaComida() = CoroutineScope(Dispatchers.IO).launch {
@@ -379,8 +414,8 @@ class CalendarActivity : AppCompatActivity() {
                 Dia(listita[i].fecha, listita[i].dia, listita[i].comida, listita[i].cena)
             saveComida(diita)
         }
-        setUpRecyclerView(sem1, rvSem2)
-        setUpRecyclerView2(sem2, rvSem3)
+        setUpRecyclerView(sem1, rvSem1)
+        setUpRecyclerView2(sem2, rvSem2)
     }
 
     fun llenaArray2() {
@@ -411,11 +446,26 @@ class CalendarActivity : AppCompatActivity() {
         }
     }
 
-    fun notification(){
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener{
-            it.result?.token?.let{
-                Log.i("fire", it)
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e(TAG, response.errorBody().toString())
+                }
+            } catch (e: java.lang.Exception) {
+                Log.e(TAG, e.toString())
             }
         }
+
+    fun bajaShared(){
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        var emailId = ""
+        emailId = sharedPref.getString("emailId", "")!!
+        id = emailId
     }
 }

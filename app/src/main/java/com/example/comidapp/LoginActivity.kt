@@ -1,6 +1,8 @@
 package com.example.comidapp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -43,12 +45,13 @@ class LoginActivity : AppCompatActivity() {
     private var mDatabase: FirebaseDatabase? = null
     private var mAuth: FirebaseAuth? = null
 
-    private var token:String = ""
+    private var token: String = ""
 
-
+    //Google Sign In
     val RC_SIGN_IN = 1234
-    val TAG = "myapp"
+    val TAG = "myApp"
     var gso: GoogleSignInOptions? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +81,18 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+
+    fun shareInfo(email: String) {
+        //Shared
+        val sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        var emailId = ""
+        editor.apply {
+            putString("emailId", email)
+            apply()
+        }
+    }
+
 
     private fun signIn() {
         val mGoogleSignInClient = GoogleSignIn.getClient(this, gso!!)
@@ -119,6 +134,8 @@ class LoginActivity : AppCompatActivity() {
                         for (profile in it.providerData) {
                             val name = profile.displayName
                             val email = profile.email
+                            shareInfo(email!!)
+                            FirebaseAuth.getInstance().setTenantId(email!!)
                             DataManager.createUser(name!!, email!!, token)
                         }
                     }
@@ -154,6 +171,7 @@ class LoginActivity : AppCompatActivity() {
         password = etPassword?.text.toString()
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+            FirebaseAuth.getInstance().setTenantId(email!!)
 
             //DataManager.createUser()
 
@@ -161,13 +179,14 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "createUserWithEmail:success")
                         val userId = mAuth!!.currentUser!!.uid
+                        Log.i(TAG, "$userId")
                         DataManager.createUser(name!!, email!!, token)
                         tvRegistro.text = "Sesion iniciada"
                         et_name.text.clear()
                         et_email.text.clear()
                         et_password.text.clear()
+                        shareInfo(email!!)
                         //Verify Email
                         //verifyEmail()
                         //update user profile information

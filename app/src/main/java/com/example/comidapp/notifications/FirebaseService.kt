@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.example.comidapp.MensajeActivity
 import com.example.comidapp.R
@@ -45,6 +46,11 @@ class FirebaseService: FirebaseMessagingService() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
+        val contentView = RemoteViews(packageName, R.layout.notification_layout)
+        contentView.setTextViewText(R.id.tvNotTitle, message.data["title"])
+        contentView.setTextViewText(R.id.tvNotContent, message.data["message"])
+
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel(notificationManager)
         }
@@ -52,9 +58,10 @@ class FirebaseService: FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(message.data["title"])
-            .setContentText(message.data["message"])
-            .setSmallIcon(R.drawable.ic_add_circle)
+            //.setContentTitle(message.data["title"])
+            //.setContentText(message.data["message"])
+            .setContent(contentView)
+            .setSmallIcon(R.drawable.ic_gorro_chef)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
@@ -67,6 +74,7 @@ class FirebaseService: FirebaseMessagingService() {
         val channel = NotificationChannel(CHANNEL_ID, channelName,IMPORTANCE_HIGH).apply{
             description = "Descripcion"
             enableLights(true)
+            enableVibration(true)
             lightColor = Color.MAGENTA
         }
         notificationManager.createNotificationChannel(channel)

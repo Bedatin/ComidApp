@@ -9,7 +9,7 @@ object DataManager {
 
     val db = FirebaseFirestore.getInstance()
     var auth = FirebaseAuth.getInstance()
-    val TAG = "myapp"
+    val TAG = "myApp"
     //var auxiliar: Map<String, Any> = hashMapOf()
     var auxiliar: ArrayList<Int> = arrayListOf()
     var auxiliar3: Any? = null
@@ -24,10 +24,10 @@ object DataManager {
 
     fun createUser(name:String, email:String, token:String) {
         val uid = auth.currentUser!!.uid
+        Log.i(TAG, "data : $uid")
         val newUser = User(name,email, token)
         db.collection("people").document(email).set(newUser)
-
-    }
+            }
 
     fun getUsers()  {
         var name = ""

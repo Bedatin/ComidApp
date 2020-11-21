@@ -1,11 +1,15 @@
 package com.example.comidapp
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.comidapp.notifications.NotificationData
 import com.example.comidapp.notifications.PushNotification
 import com.example.comidapp.notifications.RetrofitInstance
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_mensaje.*
@@ -18,7 +22,7 @@ const val TOPIC = "/topics/Maison"
 
 class MensajeActivity : AppCompatActivity() {
 
-    val TAG = "MensajeActivity"
+    val TAG = "myApp"
 
     private var destinatario = TOPIC
 
@@ -26,6 +30,7 @@ class MensajeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mensaje)
 
+        //No subscribir a todo el mundo
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
         destino()
 

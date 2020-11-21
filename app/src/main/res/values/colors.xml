@@ -14,7 +14,8 @@
     <color name="colorCuadroClaroV">#FFAB6E</color>
 
     <color name="colorCuadroOscuro">#95d7f9</color>
-    <color name="colorCuadroClaro">#9ebd45</color>
+    <color name="verdeClaro">#9ebd45</color>
+    <color name="verdeClaroFuerte">#BF9EBD45</color>
     <color name="colorBtnround">#FF9800</color>
     <color name="colorBtnLetra">#2A44F1</color>
     <color name="colorBtnLetraActual">#26B1F0</color>

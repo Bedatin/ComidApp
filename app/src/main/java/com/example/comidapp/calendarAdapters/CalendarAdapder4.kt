@@ -1,4 +1,4 @@
-package com.example.comidapp
+package com.example.comidapp.calendarAdapters
 
 
 import android.annotation.SuppressLint
@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.comidapp.Dia
+import com.example.comidapp.R
 
-class CalendarAdapder(var onDiaClick: (dia: Dia) -> Unit) :
-    RecyclerView.Adapter<CalendarAdapder.ViewHolder>() {
+class CalendarAdapder4(var onDiaClick: (dia: Dia) -> Unit) :
+    RecyclerView.Adapter<CalendarAdapder4.ViewHolder>() {
 
     var lista: List<Dia> = ArrayList()
     lateinit var context: Context

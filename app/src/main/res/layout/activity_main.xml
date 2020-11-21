@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/fondo"
     android:background="@color/azulFondo"
     android:gravity="center"
     tools:context=".MainActivity">
@@ -13,7 +14,7 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:background="@drawable/btn_carta"
+        android:background="@drawable/btn_animado"
         android:text="Calendario"
         android:textColor="@color/Blanco"
         android:textStyle="bold" />
@@ -24,7 +25,7 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:background="@drawable/btn_carta"
+        android:background="@drawable/btn_animado"
         android:text="Login"
         android:textColor="@color/Blanco"
         android:textStyle="bold" />
@@ -34,7 +35,7 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:background="@drawable/btn_carta"
+        android:background="@drawable/btn_animado"
         android:text="Mensaje"
         android:textColor="@color/Blanco"
         android:textStyle="bold" />

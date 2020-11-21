@@ -62,7 +62,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:background="@color/colorBtnLetra"
-        android:text="Registrarme"
+        android:text="Enviar"
         android:textColor="@color/Blanco" />
 
 </LinearLayout>

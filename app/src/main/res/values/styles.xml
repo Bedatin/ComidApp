@@ -9,8 +9,15 @@
     </style>
 
     <style name="Toolbar">
+        <item name="title">Maison</item>
+        <item name="android:drawableStart">@drawable/ic_pizza</item>
         <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:background">@color/colorCuadroClaro</item>
+        <item name="android:background">@color/verdeClaro</item>
+    </style>
+
+    <style name="Toolbar2">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">@color/colorAccent</item>
     </style>
 
     <style name="MyRadioButtonStyle" parent="android:Widget.Material.CompoundButton.RadioButton">
