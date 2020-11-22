@@ -2,10 +2,11 @@ package com.example.comidapp.toolbarActivities
 
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,14 +16,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.comidapp.*
-import com.example.comidapp.calendarAdapters.CalendarAdapder
-import com.example.comidapp.calendarAdapters.CalendarAdapder2
-import com.example.comidapp.calendarAdapters.CalendarAdapder3
-import com.example.comidapp.calendarAdapters.CalendarAdapder4
+import com.example.comidapp.Comida
+import com.example.comidapp.DataManager
+import com.example.comidapp.Dia
+import com.example.comidapp.R
+import com.example.comidapp.calendarAdapters.*
 import com.example.comidapp.notifications.NotificationData
 import com.example.comidapp.notifications.PushNotification
 import com.example.comidapp.notifications.RetrofitInstance
+import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -31,8 +33,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.reflect.Type
 import java.time.LocalDate
-import java.util.*
+
 
 const val TOPIC = "/topics/Maison"
 
@@ -50,7 +53,8 @@ class CalendarActivity : AppCompatActivity() {
     lateinit var mAdapter3: CalendarAdapder3
     lateinit var mRecyclerView4: RecyclerView
     lateinit var mAdapter4: CalendarAdapder4
-
+    lateinit var mRecyclerView5: RecyclerView
+    lateinit var mAdapter5: CalendarAdapder5
 
 
     var listita: ArrayList<Dia> = ArrayList()
@@ -63,20 +67,25 @@ class CalendarActivity : AppCompatActivity() {
         "S",
         "D"
     )
-    var semanaInglesa = arrayListOf<String>(
-        "MONDAY",
-        "TUESDAY",
-        "WEDNESDAY",
-        "THURSDAY",
-        "FRIDAY",
-        "SATURDAY",
-        "SUNDAY"
-    )
+
     var comidaLista: ArrayList<Comida> = ArrayList()
 
     var sem1: ArrayList<Dia> = arrayListOf()
     var sem2: ArrayList<Dia> = arrayListOf()
     var semanaza: ArrayList<Dia> = arrayListOf()
+
+
+    //Generar comidas
+    var calendario: ArrayList<Dia> = arrayListOf()
+    var comistrajos: ArrayList<Comida> = ArrayList()
+
+    var hoy = ""
+    var semana1: ArrayList<Dia> = arrayListOf()
+    var semana2: ArrayList<Dia> = arrayListOf()
+    var semana3: ArrayList<Dia> = arrayListOf()
+    var semana4: ArrayList<Dia> = arrayListOf()
+    var semana5: ArrayList<Dia> = arrayListOf()
+
 
     //Trampas
     var trampa = 50
@@ -84,6 +93,7 @@ class CalendarActivity : AppCompatActivity() {
 
     var muestra: ArrayList<Comida> = ArrayList()
 
+    //Firebase
     val arrayDocsCom = arrayListOf<String>()
     val arrayCom = arrayListOf<Comida>()
 
@@ -111,9 +121,15 @@ class CalendarActivity : AppCompatActivity() {
         trampa = windowManager.defaultDisplay.width / 4
         trampa2 = windowManager.defaultDisplay.width / 4
 
-        bajaComida()
-        bajaDias()
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        //val newFragment = LoadFragment()
+        //newFragment.show(supportFragmentManager, "Info")
+        //bajaComida()
+        //bajaDias()
+        try{
+            bajaShared2()
+        }catch (e:Exception){}
 
         btnActu.setOnClickListener {
             if (!actu && semanaza.size != 0) {
@@ -125,8 +141,11 @@ class CalendarActivity : AppCompatActivity() {
             } else {
                 btnActu.isClickable = false
                 actu = false
-                bajaComida()
-                bajaDias()
+                try{
+                    bajaShared2()
+                }catch (e:Exception){}
+                //bajaComida()
+                //bajaDias()
                 /*val intent = Intent(this, Main2Activity::class.java)
                 startActivity(intent)*/
             }
@@ -134,36 +153,20 @@ class CalendarActivity : AppCompatActivity() {
 
         btnGen1.setOnClickListener {
             llenaArray()
-
+        }
+        btnGen3.setOnClickListener {
+            semana3.clear()
+            for (i in 7..10){
+                semana3.add(calendario[i])
+            }
+            aleatorizaComida(semana3)
+            setUpRecyclerView3(semana3, rvSem3)
         }
 
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        separaSemanas()
 
         btnNoti.setOnClickListener {
-            val title = "Maison"
-            //val id = FirebaseAuth.getInstance().tenantId!!
-            bajaShared()
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    DataManager.db.collection("people").document(id).get()
-                        .addOnSuccessListener { result ->
-                            usuario = result.get("name").toString()
-                            Log.i(TAG, usuario)
-                        }.await()
-                } catch (e: Exception) {
-                    Log.i(TAG, "No pilla el nombre")
-                }
-                val message = "$usuario ha actualizado el calendario"
-                PushNotification(
-                    NotificationData(title, message),
-                    TOPIC
-                ).also {
-                    sendNotification(it)
-                }
-            }
-
-
+            enviaActualizacion()
         }
     }
 
@@ -227,6 +230,7 @@ class CalendarActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item!!)
     }
 
+    //Reciclers
     @SuppressLint("WrongConstant")
     fun setUpRecyclerView(lista: List<Dia>, RV: RecyclerView) {
         mRecyclerView = RV
@@ -298,84 +302,25 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView4.adapter = mAdapter4
     }
 
-    fun bajaComida() = CoroutineScope(Dispatchers.IO).launch {
-        arrayDocsCom.clear()
-        arrayCom.clear()
-        val querySnapshot = comidaRef.get().await()
-        for (document in querySnapshot.documents) {
-            arrayDocsCom.add(document.id)
+    @SuppressLint("WrongConstant")
+    fun setUpRecyclerView5(lista: List<Dia>, RV: RecyclerView) {
+        mRecyclerView5 = RV
+        mRecyclerView5.setHasFixedSize(true)
+        mRecyclerView5.layoutManager =
+            LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
+        mAdapter5 = CalendarAdapder5 {
+            val intent = Intent(this, DiaInfo::class.java)
+            intent.putExtra("fecha", it.fecha)
+            intent.putExtra("dia", it.dia)
+            intent.putExtra("comida", it.comida)
+            intent.putExtra("cena", it.cena)
+            startActivity(intent)
         }
-        bajaComida2()
+        mAdapter5.RecyclerAdapter(lista, this, trampa)
+        mRecyclerView5.adapter = mAdapter5
     }
 
-    fun bajaComida2() {
-        muestra.clear()
-        for (i in 0 until arrayDocsCom.size) {
-            DataManager.db.collection("comida").document(arrayDocsCom[i]).get()
-                .addOnSuccessListener { result ->
-                    val a1 = result.get("id").toString()
-                    val a2 = result.get("comida").toString()
-                    val a3 = result.get("tipo").toString()
-                    val a4 = result.get("tiempo").toString().toInt()
-                    val af = Comida(a1, a2, a3, a4)
-                    arrayCom.add(af)
-                }
-        }
-        try {
-            muestra = arrayCom
-        } catch (e: Exception) {
-        }
-
-    }
-
-    fun bajaDias() = CoroutineScope(Dispatchers.IO).launch {
-        btnActu.text = "Bajando"
-        arrayDocsDias.clear()
-        arrayDias.clear()
-        val querySnapshot = diaRef.get().await()
-        for (document in querySnapshot.documents) {
-            arrayDocsDias.add(document.id)
-        }
-        bajaDias2()
-    }
-
-    fun bajaDias2() = CoroutineScope(Dispatchers.IO).launch {
-        var ordena: List<Dia> = arrayListOf()
-        semanaza.clear()
-        for (i in 0 until arrayDocsDias.size) {
-            DataManager.db.collection("Dia").document(arrayDocsDias[i]).get()
-                .addOnSuccessListener { result ->
-                    val a1 = result.get("fecha").toString()
-                    val a2 = result.get("dia").toString()
-                    val a3 = result.get("comida").toString()
-                    val a4 = result.get("cena").toString()
-                    Log.i("dias", "dia $a2")
-                    val af = Dia(a1, a2, a3, a4)
-                    arrayDias.add(af)
-                    Log.i("dias", "array1 ${af.dia}")
-
-                }.await()
-        }
-        try {
-            ordena = arrayDias.sortedBy { it.fecha }
-            semanaza.addAll(ordena)
-            Log.i("dias", "array2 ${semanaza[0].dia}")
-        } catch (e: Exception) {
-        }
-        color.setBackgroundResource(R.color.amarillo)
-        btnActu.isClickable = true
-        btnActu.text = "Pinta"
-
-
-        /*for (i in 0..3) {
-            sem1.add(arrayDias[i])
-            Log.i("dias", sem1[i].toString())
-        }
-        for (i in 4..6) {
-            sem2.add(arrayDias[i])
-        }*/
-    }
-
+    //Generar comidas
     fun generaComida() {
         listita.clear()
         for (i in 0..6) {
@@ -412,10 +357,12 @@ class CalendarActivity : AppCompatActivity() {
         for (i in 0 until listita.size) {
             val diita =
                 Dia(listita[i].fecha, listita[i].dia, listita[i].comida, listita[i].cena)
-            saveComida(diita)
+            //saveComida(diita)
         }
-        setUpRecyclerView(sem1, rvSem1)
-        setUpRecyclerView2(sem2, rvSem2)
+        val newFragment = SureFragment(listita)
+        newFragment.show(supportFragmentManager, "Info")
+        //setUpRecyclerView(sem1, rvSem1)
+        //setUpRecyclerView2(sem2, rvSem2)
     }
 
     fun llenaArray2() {
@@ -435,9 +382,66 @@ class CalendarActivity : AppCompatActivity() {
         if (muestra.size != 0) {
             Log.i("dias", muestra.toString())
         }
+        //setUpRecyclerView(sem1, rvSem1)
+        //setUpRecyclerView2(sem2, rvSem2)
 
     }
 
+    //Nuevo Generar comidas
+    fun aleatorizaComida(cambio:ArrayList<Dia>){
+        val nuevo = arrayListOf<Dia>()
+        for (i in 0 until cambio.size) {
+            val a = (0 until comistrajos.size).random()
+            var b = true
+            var c: Int
+            do {
+                c = (0 until comistrajos.size).random()
+                if (a != c) {
+                    b = false
+                }
+            } while (b)
+            val ar1 = Dia(
+                cambio[i].fecha,
+                cambio[i].dia,
+                muestra[a].comida,
+                muestra[c].comida
+            )
+            nuevo.add(ar1)
+        }
+        cambio.clear()
+        cambio.addAll(nuevo)
+    }
+
+    fun separaSemanas(){
+        semana1.clear()
+        semana2.clear()
+        semana3.clear()
+        semana4.clear()
+        semana5.clear()
+        for (i in 0..3){
+            semana1.add(calendario[i])
+        }
+        for (i in 4..6){
+            semana2.add(calendario[i])
+        }
+        for (i in 7..10){
+            semana3.add(calendario[i])
+        }
+        for (i in 11..13){
+            semana4.add(calendario[i])
+        }
+        for (i in 14..17){
+            semana5.add(calendario[i])
+        }
+        setUpRecyclerView(semana1,rvSem1)
+        setUpRecyclerView(semana2,rvSem2)
+        setUpRecyclerView(semana3,rvSem3)
+        setUpRecyclerView(semana4,rvSem4)
+        setUpRecyclerView(semana5,rvSem5)
+
+    }
+
+    //Firebase
     fun saveComida(dia: Dia) = CoroutineScope(Dispatchers.IO).launch {
         try {
             diaRef.document(dia.fecha).set(dia)
@@ -446,6 +450,7 @@ class CalendarActivity : AppCompatActivity() {
         }
     }
 
+    //Notificaciones
     private fun sendNotification(notification: PushNotification) =
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -460,12 +465,59 @@ class CalendarActivity : AppCompatActivity() {
             }
         }
 
-    fun bajaShared(){
+    fun enviaActualizacion(){
+        val title = "Maison"
+        try {
+            bajaShared()
+        } catch (e: Exception) {
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                DataManager.db.collection("people").document(id).get()
+                    .addOnSuccessListener { result ->
+                        usuario = result.get("name").toString()
+                        Log.i(TAG, usuario)
+                    }.await()
+            } catch (e: Exception) {
+                Log.i(TAG, "No pilla el nombre")
+            }
+            val message = "$usuario ha actualizado el calendario"
+            PushNotification(
+                NotificationData(title, message),
+                TOPIC
+            ).also {
+                sendNotification(it)
+            }
+        }
+    }
+
+    //Shared
+    fun bajaShared() {
         //Shared
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
         var emailId = ""
         emailId = sharedPref.getString("emailId", "")!!
         id = emailId
     }
+
+    fun bajaShared2() {
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+
+        val gson = Gson()
+        val json: String = sharedPref.getString("listadoComida", "")!!
+        val type: Type = object : TypeToken<List<Comida?>?>() {}.type
+        val listaComidas: List<Comida> = gson.fromJson(json, type)
+        muestra.addAll(listaComidas)
+        comistrajos.addAll(listaComidas)
+
+        val gson2 = Gson()
+        val json2: String = sharedPref.getString("listadoDias", "")!!
+        val type2: Type = object : TypeToken<List<Dia?>?>() {}.type
+        val listaDias: List<Dia> = gson2.fromJson(json2, type2)
+        semanaza.addAll(listaDias)
+        calendario.addAll(listaDias)
+        llenaArray2()
+    }
+
 }

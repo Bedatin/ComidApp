@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/colorPrimary"
+    android:background="@color/azulFondo"
     android:orientation="vertical"
     tools:context=".toolbarActivities.CalendarActivity">
 
@@ -46,10 +46,19 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/item_dia" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSem5"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginStart="0dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_dia" />
+
     <Button
         android:id="@+id/btnActu"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/btn_animado"
         android:text="Actu" />
 
     <LinearLayout
