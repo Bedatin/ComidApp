@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo_degradado"
     tools:context=".MensajeActivity">
 
     <RadioGroup
@@ -19,7 +20,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/btn_carta"
+            android:background="@drawable/btn_animado"
             android:checked="true"
             android:text="Todos"
             android:textSize="20sp" />
@@ -30,7 +31,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/btn_carta"
+            android:background="@drawable/btn_animado"
             android:text="Ruth"
             android:textSize="20sp" />
 
@@ -40,7 +41,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@drawable/btn_carta"
+            android:background="@drawable/btn_animado"
             android:text="Javi"
             android:textSize="20sp" />
 
@@ -61,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@color/colorBtnLetra"
+        android:background="@drawable/btn_animado"
         android:text="Enviar"
         android:textColor="@color/Blanco" />
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@drawable/fondo_degradado"
     tools:context=".copiaEOI.AddTaskActivity">
 
     <LinearLayout
@@ -59,12 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
-            android:gravity="center"
-            android:text="Añadir"
-            android:theme="@style/ThemeOverlay.AppCompat.Light" />
+            android:background="@drawable/btn_animado"
+            android:text="Añadir" />
 
     </LinearLayout>
 

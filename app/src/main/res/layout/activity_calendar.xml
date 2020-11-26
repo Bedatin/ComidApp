@@ -6,20 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/azulFondo"
+    android:background="@drawable/fondo_degradado"
     android:orientation="vertical"
     tools:context=".toolbarActivities.CalendarActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <TextView
+        android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:theme="@style/Toolbar" />
+        android:layout_height="30dp"
+        android:gravity="center_horizontal"
+        android:text="Calendario"
+        android:textColor="@color/Negro"
+        android:textSize="35sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSem1"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginTop="10dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_dia" />
 
@@ -35,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_dia" />
 
@@ -51,15 +56,10 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginStart="0dp"
+        android:layout_marginTop="10dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_dia" />
 
-    <Button
-        android:id="@+id/btnActu"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/btn_animado"
-        android:text="Actu" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -71,32 +71,44 @@
             android:id="@+id/btnGen1"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/btn_animado"
             android:layout_margin="5dp"
+            android:background="@drawable/btn_animado"
             android:text="G1" />
 
         <Button
             android:id="@+id/btnGen2"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/btn_animado"
             android:layout_margin="5dp"
+            android:background="@drawable/btn_animado"
             android:text="G2" />
 
         <Button
             android:id="@+id/btnGen3"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/btn_animado"
             android:layout_margin="5dp"
+            android:background="@drawable/btn_animado"
             android:text="G3" />
 
+
         <Button
-            android:id="@+id/color"
+            android:id="@+id/btnLista"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/btn_animado"
+            android:text="List" />
+
+        <Button
+            android:id="@+id/btnReglas"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@color/Negro" />
+            android:background="@drawable/btn_animado"
+            android:text="R" />
+
     </LinearLayout>
 
     <Button

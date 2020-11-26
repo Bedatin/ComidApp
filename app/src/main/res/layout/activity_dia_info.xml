@@ -3,15 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/fondo_degradado"
+    android:gravity="center_horizontal"
     tools:context=".toolbarActivities.DiaInfo">
 
     <TextView
         android:id="@+id/tvDia"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="Lunes"
         android:textColor="#010"
@@ -50,7 +52,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="2dp"
-            android:src="@color/colorBtnLetra" />
+            android:src="@color/colorAzulOscuro" />
 
         <TextView
             android:id="@+id/tvCena"
@@ -97,7 +99,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="2dp"
-            android:src="@color/colorBtnLetra" />
+            android:src="@color/colorAzulOscuro" />
 
         <EditText
             android:id="@+id/etCena"
@@ -114,6 +116,9 @@
         android:id="@+id/btnSubeCambio"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="boton 1" />
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_animado"
+        android:text="Guardar"
+        android:textColor="@color/Blanco" />
 
 </LinearLayout>

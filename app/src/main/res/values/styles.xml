@@ -22,7 +22,7 @@
 
     <style name="MyRadioButtonStyle" parent="android:Widget.Material.CompoundButton.RadioButton">
         <item name="android:textColor">@color/Blanco</item>
-        <item name="buttonTint">@color/azulFondo</item>
+        <item name="buttonTint">@color/colorAccent</item>
     </style>
 
 </resources>

@@ -11,19 +11,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.DataManager.db
 
-class Listado2Adapder (var listaEntrada: ArrayList<Comida>): RecyclerView.Adapter<Listado2Adapder.ViewHolder>() {
 
-    var lista: ArrayList<Comida> = listaEntrada
+class Listado2Adapder(var onComidaClick: (comida: Comida) -> Unit) :
+    RecyclerView.Adapter<Listado2Adapder.ViewHolder>() {
+
+    var lista: ArrayList<Comida> = ArrayList()
+    lateinit var context: Context
     //lateinit var context: Context
 
     fun RecyclerAdapter(series: ArrayList<Comida>, context: Context) {
         this.lista = series
-        //this.context = context
+        this.context = context
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.bind(item)
+        holder.bind(item, item)
         holder.btnDelete.setOnClickListener {
             db.collection("comida").document(item.id).delete()
         }
@@ -38,16 +41,15 @@ class Listado2Adapder (var listaEntrada: ArrayList<Comida>): RecyclerView.Adapte
         return lista.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvComida = view.findViewById(R.id.tvComida) as TextView
         val tvTipo = view.findViewById(R.id.tvTipo) as TextView
         val tvTiempo = view.findViewById(R.id.tvTiempo) as TextView
-        val btnDelete= view.findViewById(R.id.btnDelete) as Button
-
+        val btnDelete = view.findViewById(R.id.btnDelete) as Button
 
 
         @SuppressLint("SetTextI18n")
-        fun bind(listita: Comida) {
+        fun bind(listita: Comida, item:Comida) {
             tvComida.text = listita.comida
             tvTipo.text = listita.tipo
             when (listita.tiempo) {
@@ -55,7 +57,10 @@ class Listado2Adapder (var listaEntrada: ArrayList<Comida>): RecyclerView.Adapte
                 2 -> tvTiempo.text = "Cena"
                 else -> tvTiempo.text = "Ambas"
             }
+            itemView.setOnClickListener {
+                onComidaClick(item)
+            }
         }
     }
 
-    }
+}

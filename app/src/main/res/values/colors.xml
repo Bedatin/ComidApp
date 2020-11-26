@@ -9,7 +9,7 @@
     <color name="Blanco">#FFFFFF</color>
     <color name="Negro">#111111</color>
 
-    <color name="colorTransparente">#009dc8eb</color>
+    <color name="colorTransparente">#00363E6B</color>
     <color name="colorCuadroOscuroV">#CCBE4319</color>
     <color name="colorCuadroClaroV">#FFAB6E</color>
 
@@ -17,7 +17,7 @@
     <color name="verdeClaro">#9ebd45</color>
     <color name="verdeClaroFuerte">#BF9EBD45</color>
     <color name="colorBtnround">#FF9800</color>
-    <color name="colorBtnLetra">#2A44F1</color>
+    <color name="colorAzulOscuro">#2A44F1</color>
     <color name="colorBtnLetraActual">#26B1F0</color>
     <color name="amarillo">#FFEB3B</color>
 

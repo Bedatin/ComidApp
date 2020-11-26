@@ -1,63 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toolsNs="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    xmlns:toolsNs="http://schemas.android.com/tools"
+    android:background="@color/colorTransparente"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center"
-    android:background="@color/Blanco"
     android:orientation="horizontal">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/carditem"
-        android:layout_width="match_parent"
-        android:background="@color/Blanco"
-        android:layout_height="50dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@color/Blanco">
+    <TextView
+        android:id="@+id/tvComida"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textColor="#010"
+        android:textSize="12sp"
+        toolsNs:text="Pechugas" />
 
-            <TextView
-                android:id="@+id/tvComida"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                toolsNs:text="Pechugas"
-                android:textColor="#010"
-                android:textSize="12sp" />
+    <TextView
+        android:id="@+id/tvTipo"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textColor="#010"
+        android:textSize="12sp"
+        toolsNs:text="Carne" />
 
-            <TextView
-                android:id="@+id/tvTipo"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                toolsNs:text="Carne"
-                android:textColor="#010"
-                android:textSize="12sp" />
+    <TextView
+        android:id="@+id/tvTiempo"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:textColor="#010"
+        android:textSize="12sp"
+        toolsNs:text="Ambas" />
 
-            <TextView
-                android:id="@+id/tvTiempo"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                toolsNs:text="Ambas"
-                android:textColor="#010"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/ic_delete" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/ic_delete" />
 </LinearLayout>
+

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulFondo"
+    android:background="@drawable/fondo_degradado"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".LoginActivity">
@@ -15,7 +15,7 @@
         android:layout_height="58dp"
         android:layout_gravity="center"
         android:layout_marginBottom="30dp"
-        android:background="@color/colorBtnLetra"
+        android:background="@color/colorAzulOscuro"
         android:gravity="center"
         android:text="Inicia sesion"
         android:textColor="@color/Blanco"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:background="@color/colorBtnLetra"
+            android:background="@drawable/btn_animado"
             android:text="Registrarme"
             android:textColor="@color/Blanco" />
 
@@ -80,7 +80,7 @@
         android:layout_height="58dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@color/colorBtnLetra"
+        android:background="@drawable/btn_animado"
         android:text="Cerrar sesión"
         android:textColor="@color/Blanco" />
 
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@color/colorBtnLetra"
+        android:background="@drawable/btn_animado"
         android:text="Notifica"
         android:textColor="@color/Blanco" />
 

@@ -1,6 +1,8 @@
 package com.example.comidapp.toolbarActivities
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,22 +11,25 @@ import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.comidapp.Comida
-import com.example.comidapp.DataManager
-import com.example.comidapp.Listado2Adapder
-import com.example.comidapp.R
+import com.example.comidapp.*
 import com.example.comidapp.copiaEOI.AddTaskActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_calendar.*
 import kotlinx.android.synthetic.main.activity_listado.*
+import kotlinx.android.synthetic.main.activity_listado.tvTitulo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.reflect.Type
 
 class ListadoActivity : AppCompatActivity() {
 
     lateinit var mRecyclerView: RecyclerView
+    lateinit var mAdapter: Listado2Adapder
 
     var muestra: ArrayList<Comida> = ArrayList()
 
@@ -33,12 +38,32 @@ class ListadoActivity : AppCompatActivity() {
 
     val comidaRef = Firebase.firestore.collection("comida")
 
+    var comistrajos: ArrayList<Comida> = ArrayList()
+    var comiditas: ArrayList<Comida> = ArrayList()
+
+
+    //Notificaciones
+    var usuario = "Alguien"
+    var id = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_listado)
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
+        tvTitulo.typeface = Typeface.createFromAsset(assets, "fonts/CURSHT.TTF")
 
         bajaComida2()
+
+
+        try{
+            bajaShared2()
+            Log.i("comida2",comistrajos.toString())
+        }catch (e:Exception){}
+        Log.i("comida2", comistrajos.toString())
+        aPintar()
+        Log.i("comida2", "2 $comiditas")
+
+
         btnAdd.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             startActivity(intent)
@@ -48,6 +73,10 @@ class ListadoActivity : AppCompatActivity() {
         }
         fab3.setOnClickListener {
             bajaComida2()
+            Log.i("comida2", comistrajos.toString())
+            aPintar()
+            Log.i("comida2", "2 $comiditas")
+
         }
 
         btnComida.setOnClickListener {
@@ -56,9 +85,46 @@ class ListadoActivity : AppCompatActivity() {
         btnTipo.setOnClickListener {
             muestra.sortByDescending { it.comida }
         }
+        buscador()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    fun buscador(){
+        searchV.setOnCloseListener {
+            setUpRecyclerView(muestra)
+            false
+        }
+        val queryTextLis = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(textoEscrito: String?): Boolean {
+                //TODO Cuando se pulsa en el boton de buscar del teclado entra aqui
+                if (textoEscrito != null) {
+                    val muestraFiltro = muestra.filter {
+                        it.comida.contains(textoEscrito, true) || it.tipo.contains(
+                            textoEscrito,
+                            true
+                        )
+                    } as ArrayList<Comida>
+                    setUpRecyclerView(muestraFiltro)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(textoEscrito: String?): Boolean {
+                //TODO Cada vez que escribimos una letra entra aqui
+
+                val muestraFiltro = muestra.filter {
+                    it.comida.contains(
+                        textoEscrito.toString(),
+                        true
+                    ) || it.tipo.contains(textoEscrito.toString(), true)
+                } as ArrayList<Comida>
+                setUpRecyclerView(muestraFiltro)
+                return false
+            }
+        } as SearchView.OnQueryTextListener
+        searchV.setOnQueryTextListener(queryTextLis)
+    }
+
+    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
 
         val searchView = menu?.findItem(R.id.app_bar_search)?.actionView as SearchView
@@ -119,7 +185,7 @@ class ListadoActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item!!)
-    }
+    }*/
 
     fun bajaComida2() = CoroutineScope(Dispatchers.IO).launch {
         arrayDocs.clear()
@@ -149,13 +215,54 @@ class ListadoActivity : AppCompatActivity() {
         }
 
         muestra = arrayCom
+        comistrajos = arrayCom
+
     }
 
     fun setUpRecyclerView(lista: ArrayList<Comida>) {
         mRecyclerView = rvComidas
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        //mAdapter.RecyclerAdapter(lista, this)
-        mRecyclerView.adapter = Listado2Adapder(lista)
+        mAdapter = Listado2Adapder {
+            val intent = Intent(this, ComidaInfo::class.java)
+            intent.putExtra("comida", it.comida)
+            intent.putExtra("tipo", it.tipo)
+            intent.putExtra("tiempo", it.tiempo)
+            startActivity(intent)
+        }
+        mAdapter.RecyclerAdapter(lista, this)
+        mRecyclerView.adapter = mAdapter
+    }
+
+    //Shared
+    fun bajaShared() {
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        var emailId = ""
+        emailId = sharedPref.getString("emailId", "")!!
+        id = emailId
+    }
+
+    fun bajaShared2() {
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+
+        val gson = Gson()
+        val json: String = sharedPref.getString("listadoComida", "")!!
+        val type: Type = object : TypeToken<List<Comida?>?>() {}.type
+        val listaComidas: List<Comida> = gson.fromJson(json, type)
+        //muestra.addAll(listaComidas)
+        comistrajos.addAll(listaComidas)
+        setUpRecyclerView(comistrajos)
+
+    }
+
+    fun aPintar() {
+        comiditas.clear()
+        comiditas.addAll(comistrajos)
+
+        setUpRecyclerView(comiditas)
+
+
     }
 }

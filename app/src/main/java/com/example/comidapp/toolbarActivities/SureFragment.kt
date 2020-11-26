@@ -1,6 +1,8 @@
 package com.example.comidapp.toolbarActivities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,31 +43,10 @@ class SureFragment(var dias :ArrayList<Dia>) : DialogFragment() {
                     Dia(dias[i].fecha, dias[i].dia, dias[i].comida, dias[i].cena)
                 saveComida(diita)
             }
+            val sharedPref = activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
+            sharedPref?.edit()?.remove("listadoDias")?.apply()
             dismiss()
             startActivity(Intent(context, LoadActivity::class.java))
-            /*if (juego == "emparejar") {
-                startActivity(Intent(context, EmparejarActivity::class.java))
-                activity?.finish()
-            }
-            if (juego == "sumas") {
-                startActivity(Intent(context, SumasActivity::class.java))
-                activity?.finish()
-            }
-            if (juego == "memory") {
-                startActivity(Intent(context, MemoryActivity::class.java))
-                activity?.finish()
-            }
-            if (juego == "tres") {
-                val intent = Intent(context, TresSolo::class.java)
-                intent.putExtra("difi", tres)
-                intent.putExtra("animal", animal)
-                startActivity(intent)
-                activity?.finish()
-            }
-            if (juego == "tresdos") {
-                startActivity(Intent(context, TresDos::class.java))
-                activity?.finish()
-            }*/
         }
 
         btnNo.setOnClickListener {

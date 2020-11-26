@@ -33,9 +33,18 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".MensajeActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".toolbarActivities.DiaInfo" />
+        <activity
+            android:name=".MensajeActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".toolbarActivities.DiaInfo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".toolbarActivities.ComidaInfo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".toolbarActivities.ReglasActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -45,8 +54,12 @@
         <activity
             android:name=".toolbarActivities.CalendarActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".copiaEOI.AddTaskActivity" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".copiaEOI.AddTaskActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>

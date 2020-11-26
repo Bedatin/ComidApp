@@ -4,10 +4,15 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import com.example.comidapp.toolbarActivities.CalendarActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +21,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        cuadrado.setInAnimation(this, android.R.anim.fade_in)
+        cuadrado.setOutAnimation(this, android.R.anim.fade_out)
+
+        cuadrado.setOnClickListener {
+            cuadrado.showNext()
+        }
+
+        /*for (i in 0..10){
+            Handler().postDelayed({cuadrado.showNext()}, (i*4000).toLong())
+        }*/
 
         bajaShared()
         btnCalendar.setOnClickListener {
@@ -46,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             if (emailId == "") {
                 fondo.setBackgroundResource(R.color.colorAccent)
             } else {
-                fondo.setBackgroundResource(R.color.azulFondo)
+                fondo.setBackgroundResource(R.drawable.fondo_degradado)
             }
         }catch (e:Exception){}
     }

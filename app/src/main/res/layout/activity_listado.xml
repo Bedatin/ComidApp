@@ -4,15 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulFondo"
+    android:background="@drawable/fondo_degradado"
     android:orientation="vertical"
     tools:context=".toolbarActivities.ListadoActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <TextView
+        android:id="@+id/tvTitulo"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        app:theme="@style/Toolbar" />
+        android:layout_height="30dp"
+        android:gravity="center_horizontal"
+        android:text="Listado"
+        android:textColor="@color/Negro"
+        android:textSize="35sp" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchV"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:background="@color/verdeClaro"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,7 +34,7 @@
             android:id="@+id/arriba"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/azulFondo"
+            android:background="@color/colorTransparente"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
@@ -73,12 +84,11 @@
             android:id="@+id/rvComidas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Blanco"
             app:layout_constraintTop_toBottomOf="@id/arriba"
             tools:listitem="@layout/item_comida" />
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
             android:id="@+id/fab2"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulSplash"
+    android:background="@drawable/fondo_degradado"
     tools:context=".toolbarActivities.ReglasActivity">
 
     <androidx.appcompat.widget.Toolbar

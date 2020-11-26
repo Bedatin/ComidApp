@@ -6,7 +6,7 @@
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/item_dia"
-    android:background="@drawable/recuadro_negro"
+    android:background="@color/colorTransparente"
     android:orientation="vertical">
 
     <TextView
@@ -36,7 +36,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="2dp"
-        android:src="@color/colorBtnLetra" />
+        android:src="@color/colorAzulOscuro" />
 
     <TextView
         android:id="@+id/tvCena"

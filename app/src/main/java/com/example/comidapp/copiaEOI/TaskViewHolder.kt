@@ -13,7 +13,7 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
   val comida = itemView.findViewById<TextView>(R.id.tvComida)
   val delete = itemView.findViewById<ImageButton>(R.id.btnDelete)
-  val cardView = itemView.findViewById<CardView>(R.id.carditem)
+  //val cardView = itemView.findViewById<CardView>(R.id.carditem)
 
 
   fun bindTask(item: Comida) {
