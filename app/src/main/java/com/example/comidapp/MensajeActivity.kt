@@ -124,7 +124,6 @@ class MensajeActivity : AppCompatActivity() {
         Log.i("hora", "4 " + System.currentTimeMillis().toString())
         //alarmManager.set(AlarmManager.RTC_WAKEUP,tiempo,pendingIntent)
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+3000000, pendingIntent)
-
     }
 
 
