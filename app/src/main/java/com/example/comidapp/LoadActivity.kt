@@ -8,6 +8,9 @@ import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.example.comidapp.notifications.NotificationData
+import com.example.comidapp.notifications.PushNotification
+import com.example.comidapp.notifications.RetrofitInstance
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -22,6 +25,9 @@ import java.util.*
 
 
 class LoadActivity : AppCompatActivity() {
+
+    val TAG = "myApp"
+
 
     val arrayDocsCom = arrayListOf<String>()
     val arrayCom = arrayListOf<Comida>()
@@ -66,7 +72,13 @@ class LoadActivity : AppCompatActivity() {
         "J"
     )
 
-    var bajado = false
+    //Notificaciones
+    var usuario = "Alguien"
+    var id = ""
+
+    var notificationS = false
+    var notificationR = false
+
 
     val hoyLetra = LocalDate.now().dayOfWeek.toString()
     var lunes = LocalDate.now()
@@ -84,10 +96,19 @@ class LoadActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         setContentView(R.layout.activity_load)
-        try{
+        try {
             bajaShared()
-        }catch (e:java.lang.Exception){}
-        if (calendario.size == 0) {
+        } catch (e: java.lang.Exception) {
+        }
+        try {
+            notificationS = intent.getBooleanExtra("notificationS", false)
+        } catch (e: java.lang.Exception) {
+        }
+        try {
+            notificationR = intent.getBooleanExtra("notificationR", false)
+        } catch (e: java.lang.Exception) {
+        }
+        if (calendario.size == 0 || notificationS || notificationR) {
             CoroutineScope(Dispatchers.IO).launch {
                 bajaComida()
                 bajaCalendario()
@@ -95,6 +116,9 @@ class LoadActivity : AppCompatActivity() {
         } else {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+        if (notificationS) {
+            //enviaActualizacion()
         }
 
     }
@@ -126,43 +150,6 @@ class LoadActivity : AppCompatActivity() {
             comistrajos = arrayCom
         } catch (e: Exception) {
         }
-    }
-
-    fun bajaDias() = CoroutineScope(Dispatchers.IO).launch {
-        arrayDocsDias.clear()
-        arrayDias.clear()
-        val querySnapshot = diaRef.get().await()
-        for (document in querySnapshot.documents) {
-            arrayDocsDias.add(document.id)
-        }
-        bajaDias2()
-    }
-
-    fun bajaDias2() = CoroutineScope(Dispatchers.IO).launch {
-        var ordena: List<Dia> = arrayListOf()
-        listadoDias.clear()
-        for (i in 0 until arrayDocsDias.size) {
-            DataManager.db.collection("Dia").document(arrayDocsDias[i]).get()
-                .addOnSuccessListener { result ->
-                    val a1 = result.get("fecha").toString()
-                    val a2 = result.get("dia").toString()
-                    val a3 = result.get("comida").toString()
-                    val a4 = result.get("cena").toString()
-                    Log.i("dias", "dia $a2")
-                    val af = Dia(a1, a2, a3, a4)
-                    arrayDias.add(af)
-                    Log.i("dias", "array1 ${af.dia}")
-
-                }.await()
-        }
-        try {
-            ordena = arrayDias.sortedBy { it.fecha }
-            listadoDias.addAll(ordena)
-            //Log.i("dias", "array2 ${listadoDias[0].dia}")
-        } catch (e: Exception) {
-        }
-        enviaInfo()
-        finish()
     }
 
     fun bajaCalendario() = CoroutineScope(Dispatchers.IO).launch {
@@ -222,6 +209,10 @@ class LoadActivity : AppCompatActivity() {
         //Shared
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
 
+        var emailId = ""
+        emailId = sharedPref.getString("emailId", "")!!
+        id = emailId
+
         val gson = Gson()
         val json: String = sharedPref.getString("listadoComida", "")!!
         val type: Type = object : TypeToken<List<Comida?>?>() {}.type
@@ -234,7 +225,6 @@ class LoadActivity : AppCompatActivity() {
         val listaDias: List<Dia> = gson2.fromJson(json2, type2)
         calendario.addAll(listaDias)
     }
-
 
     fun enviaInfo() {
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
@@ -250,5 +240,85 @@ class LoadActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
 
+    }
+
+    //Notificaciones
+    private fun sendNotification(notification: PushNotification) =
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.postNotification(notification)
+                if (response.isSuccessful) {
+                    Log.d(TAG, "Response: ${Gson().toJson(response)}")
+                } else {
+                    Log.e(TAG, response.errorBody().toString())
+                }
+            } catch (e: java.lang.Exception) {
+                Log.e(TAG, e.toString())
+            }
+        }
+
+    fun enviaActualizacion() {
+        val title = "Maison"
+        try {
+            bajaShared()
+        } catch (e: Exception) {
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                DataManager.db.collection("people").document(id).get()
+                    .addOnSuccessListener { result ->
+                        usuario = result.get("name").toString()
+                        Log.i(TAG, usuario)
+                    }.await()
+            } catch (e: Exception) {
+                Log.i(TAG, "No pilla el nombre")
+            }
+            val message = "$usuario ha actualizado el calendario"
+            PushNotification(
+                NotificationData(title, message, "mensaje"),
+                com.example.comidapp.toolbarActivities.TOPIC
+            ).also {
+                sendNotification(it)
+            }
+        }
+    }
+
+
+    //Viejas
+    fun bajaDias() = CoroutineScope(Dispatchers.IO).launch {
+        arrayDocsDias.clear()
+        arrayDias.clear()
+        val querySnapshot = diaRef.get().await()
+        for (document in querySnapshot.documents) {
+            arrayDocsDias.add(document.id)
+        }
+        bajaDias2()
+    }
+
+    fun bajaDias2() = CoroutineScope(Dispatchers.IO).launch {
+        var ordena: List<Dia> = arrayListOf()
+        listadoDias.clear()
+        for (i in 0 until arrayDocsDias.size) {
+            DataManager.db.collection("Dia").document(arrayDocsDias[i]).get()
+                .addOnSuccessListener { result ->
+                    val a1 = result.get("fecha").toString()
+                    val a2 = result.get("dia").toString()
+                    val a3 = result.get("comida").toString()
+                    val a4 = result.get("cena").toString()
+                    Log.i("dias", "dia $a2")
+                    val af = Dia(a1, a2, a3, a4)
+                    arrayDias.add(af)
+                    Log.i("dias", "array1 ${af.dia}")
+
+                }.await()
+        }
+        try {
+            ordena = arrayDias.sortedBy { it.fecha }
+            listadoDias.addAll(ordena)
+            //Log.i("dias", "array2 ${listadoDias[0].dia}")
+        } catch (e: Exception) {
+        }
+        enviaInfo()
+        finish()
     }
 }

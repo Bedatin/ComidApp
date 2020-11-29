@@ -4,121 +4,243 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/fondo_degradado"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".toolbarActivities.DiaInfo">
 
     <TextView
         android:id="@+id/tvDia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="Lunes"
         android:textColor="#010"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Original"
-            android:textColor="#010"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="155dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:src="@color/Negro" />
-
-        <TextView
-            android:id="@+id/tvComida"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="Bacon en taquitos"
-            android:textColor="#010"
-            android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Original"
+                android:textColor="#010"
+                android:textSize="18sp" />
 
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="2dp"
-            android:src="@color/colorAzulOscuro" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="3dp"
+                android:src="@color/Negro" />
 
-        <TextView
-            android:id="@+id/tvCena"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="Bacon en taquitos"
-            android:textColor="#010"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/tvComida"
+                android:layout_width="135dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:hint="Bacon en taquitos"
+                android:textColor="#010"
+                android:textSize="15sp" />
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="3dp"
+                android:src="@color/colorAzulOscuro" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvCena"
+                android:layout_width="135dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:hint="Bacon en taquitos"
+                android:textColor="#010"
+                android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Nuevo"
-            android:textColor="#010"
-            android:textSize="20sp" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:src="@color/Negro" />
-
-        <EditText
-            android:id="@+id/etComida"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:hint="Bacon en taquitos"
-            android:textColor="#010"
-            android:textSize="15sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Nuevo"
+                android:textColor="#010"
+                android:textSize="18sp" />
 
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="2dp"
-            android:src="@color/colorAzulOscuro" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="3dp"
+                android:src="@color/Negro" />
 
-        <EditText
-            android:id="@+id/etCena"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:hint="Bacon en taquitos"
-            android:textColor="#010"
-            android:textSize="15sp" />
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etComida"
+                    android:layout_width="135dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="Bacon en taquitos"
+                    android:textColor="@color/Negro"
+                    android:textColorHint="@color/Gris"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btnEtComida"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/btn_animado"
+                    android:text="+"
+                    android:textColor="@color/Blanco" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="3dp"
+                android:src="@color/colorAzulOscuro" />
+
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/etCena"
+                    android:layout_width="135dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="Bacon en taquitos"
+                    android:textColor="@color/Negro"
+                    android:textColorHint="@color/Gris"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btnEtCena"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/btn_animado"
+                    android:text="+"
+                    android:textColor="@color/Blanco" />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <Button
         android:id="@+id/btnSubeCambio"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/btn_animado"
         android:text="Guardar"
         android:textColor="@color/Blanco" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchV"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@color/verdeClaro"/>
+
+    <LinearLayout
+        android:id="@+id/arriba"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorTransparente"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnComida"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/verdeClaro"
+            android:text="Comdida"
+            android:textColor="@color/Blanco"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnTipo"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/verdeClaro"
+            android:text="Tipo"
+            android:textColor="@color/Blanco"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnTiempo"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/verdeClaro"
+            android:text="Tiempo"
+            android:textColor="@color/Blanco"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnAdd"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:background="@color/Blanco"
+            android:src="@drawable/ic_add_box"
+            />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvComidas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_comida" />
 
 </LinearLayout>

@@ -12,7 +12,8 @@ import android.graphics.Color
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import com.example.comidapp.MensajeActivity
+import com.example.comidapp.LoadActivity
+import com.example.comidapp.MainActivity
 import com.example.comidapp.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -42,7 +43,13 @@ class FirebaseService: FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val intent = Intent(this, MensajeActivity::class.java)
+        val activity= if(message.data["type"] == "mensaje"){
+            LoadActivity::class.java
+        }else{
+            MainActivity::class.java
+        }
+        val intent = Intent(this, activity)
+        intent.putExtra("notificationR", true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 

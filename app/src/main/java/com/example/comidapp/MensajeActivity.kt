@@ -1,8 +1,17 @@
 package com.example.comidapp
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.example.comidapp.notifications.AlarmReceiver
 import com.example.comidapp.notifications.NotificationData
 import com.example.comidapp.notifications.PushNotification
 import com.example.comidapp.notifications.RetrofitInstance
@@ -12,13 +21,22 @@ import kotlinx.android.synthetic.main.activity_mensaje.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.util.*
+
 
 const val TOPIC = "/topics/Maison"
 
 class MensajeActivity : AppCompatActivity() {
 
     val TAG = "myApp"
+
+    //Alarma
+    private var notificationsTime: TextView? = null
+    private val alarmID = 1
+    private val settings: SharedPreferences? = null
 
     private var destinatario = TOPIC
 
@@ -35,13 +53,19 @@ class MensajeActivity : AppCompatActivity() {
             val message = et_mensaje.text.toString()
             if(message.isNotEmpty()){
                 PushNotification(
-                    NotificationData(title, message),
+                    NotificationData(title, message, "mensaje"),
                     destinatario
                     ).also {
                     sendNotification(it)
                 }
             }
         }
+
+
+        btnAlarm.setOnClickListener {
+            alarma2()
+        }
+
 
     }
 
@@ -56,6 +80,7 @@ class MensajeActivity : AppCompatActivity() {
         }catch (e:Exception){
             Log.e(TAG, e.toString())
         }
+
     }
 
     fun destino(){
@@ -74,5 +99,47 @@ class MensajeActivity : AppCompatActivity() {
                     destinatario = result.get("token").toString()
                 }
         }
+    }
+
+    fun alarma2(){
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent: PendingIntent
+        pendingIntent = PendingIntent.getBroadcast(
+            this, 1000, alarmIntent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val hora = System.currentTimeMillis()
+        Log.i("hora", hora.toString())
+        val h = LocalDateTime.now().hour
+        val m = LocalDateTime.now().minute +2
+        val s =  LocalDateTime.now().second
+        val t= h.toLong()*3600000 + m.toLong()*60000 + s*1000
+        val tiempo = 20*3600000L + 39*60000L
+        val tiempazo = 22*3600000L  - t
+        Log.i("hora", "1 $tiempo")
+        Log.i("hora", "2 $tiempazo")
+        Log.i("hora", "3 " + SystemClock.setCurrentTimeMillis(200L).toString())
+        Log.i("hora", "4 " + System.currentTimeMillis().toString())
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,tiempo,pendingIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+3000000, pendingIntent)
+
+    }
+
+
+    fun alarma(){
+        val alarmManager =
+            this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent: PendingIntent
+        pendingIntent = PendingIntent.getBroadcast(
+            this, 20, alarmIntent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+        alarmIntent.data = Uri.parse("custom://" + System.currentTimeMillis())
+        alarmManager[AlarmManager.RTC_WAKEUP, 20] = pendingIntent
+
+
     }
 }

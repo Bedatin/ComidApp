@@ -6,8 +6,6 @@ import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +15,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.activity_calendar.*
 import kotlinx.android.synthetic.main.activity_listado.*
 import kotlinx.android.synthetic.main.activity_listado.tvTitulo
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +26,7 @@ import java.lang.reflect.Type
 class ListadoActivity : AppCompatActivity() {
 
     lateinit var mRecyclerView: RecyclerView
-    lateinit var mAdapter: Listado2Adapder
+    lateinit var mAdapter: ListadoAdapter
 
     var muestra: ArrayList<Comida> = ArrayList()
 
@@ -80,10 +77,10 @@ class ListadoActivity : AppCompatActivity() {
         }
 
         btnComida.setOnClickListener {
-            muestra.sortBy { it.comida }
+            comistrajos.sortBy { it.comida }
         }
         btnTipo.setOnClickListener {
-            muestra.sortByDescending { it.comida }
+            comistrajos.sortByDescending { it.comida }
         }
         buscador()
     }
@@ -223,7 +220,7 @@ class ListadoActivity : AppCompatActivity() {
         mRecyclerView = rvComidas
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        mAdapter = Listado2Adapder {
+        mAdapter = ListadoAdapter {
             val intent = Intent(this, ComidaInfo::class.java)
             intent.putExtra("comida", it.comida)
             intent.putExtra("tipo", it.tipo)

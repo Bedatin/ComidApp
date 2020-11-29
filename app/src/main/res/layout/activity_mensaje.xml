@@ -51,7 +51,7 @@
         android:id="@+id/et_mensaje"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:textAlignment="center"
         android:textColor="#111111" />
 
@@ -64,6 +64,16 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/btn_animado"
         android:text="Enviar"
+        android:textColor="@color/Blanco" />
+
+    <Button
+        android:id="@+id/btnAlarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_animado"
+        android:text="Alarma hoy 22:00"
         android:textColor="@color/Blanco" />
 
 </LinearLayout>

@@ -59,6 +59,7 @@ class CalendarAdapder(var onDiaClick: (dia: Dia) -> Unit) :
             itemView.setOnClickListener {
                 onDiaClick(item)
             }
+
         }
     }
 

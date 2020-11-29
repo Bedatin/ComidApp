@@ -133,6 +133,13 @@ class CalendarActivity : AppCompatActivity() {
             bajaShared2()
             Log.i("comida2",comistrajos.toString())
         }catch (e:Exception){}
+        try{
+            actu = intent.getBooleanExtra("cambios", false)
+            if(actu){
+                btnNoti.setBackgroundResource(R.color.colorAccent)
+            }
+        }catch (e:Exception){}
+
 
         /*btnActu.setOnClickListener {
             if (!actu && semanaza.size != 0) {
@@ -310,7 +317,9 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
+            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
+            this.finish()
         }
         mAdapter.RecyclerAdapter(lista, this, trampa)
         mRecyclerView.adapter = mAdapter
@@ -328,7 +337,9 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
+            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
+            this.finish()
         }
         mAdapter2.RecyclerAdapter(lista, this, trampa2)
         mRecyclerView2.adapter = mAdapter2
@@ -346,7 +357,9 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
+            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
+            this.finish()
         }
         mAdapter3.RecyclerAdapter(lista, this, trampa)
         mRecyclerView3.adapter = mAdapter3
@@ -364,7 +377,9 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
+            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
+            this.finish()
         }
         mAdapter4.RecyclerAdapter(lista, this, trampa2)
         mRecyclerView4.adapter = mAdapter4
@@ -382,7 +397,9 @@ class CalendarActivity : AppCompatActivity() {
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
+            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
+            this.finish()
         }
         mAdapter5.RecyclerAdapter(lista, this, trampa)
         mRecyclerView5.adapter = mAdapter5
@@ -552,7 +569,7 @@ class CalendarActivity : AppCompatActivity() {
             }
             val message = "$usuario ha actualizado el calendario"
             PushNotification(
-                NotificationData(title, message),
+                NotificationData(title, message, "mensaje"),
                 TOPIC
             ).also {
                 sendNotification(it)

@@ -46,7 +46,9 @@ class SureFragment(var dias :ArrayList<Dia>) : DialogFragment() {
             val sharedPref = activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
             sharedPref?.edit()?.remove("listadoDias")?.apply()
             dismiss()
-            startActivity(Intent(context, LoadActivity::class.java))
+            val intent = Intent(context, LoadActivity::class.java)
+            intent.putExtra("notificationS", true)
+            startActivity(intent)
         }
 
         btnNo.setOnClickListener {

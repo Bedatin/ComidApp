@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.DataManager.db
 
 
-class Listado2Adapder(var onComidaClick: (comida: Comida) -> Unit) :
-    RecyclerView.Adapter<Listado2Adapder.ViewHolder>() {
+class ListadoAdapter2(var onComidaClick: (comida: Comida) -> Unit) :
+    RecyclerView.Adapter<ListadoAdapter2.ViewHolder>() {
 
     var lista: ArrayList<Comida> = ArrayList()
     lateinit var context: Context
