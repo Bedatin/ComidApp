@@ -76,4 +76,23 @@
         android:text="Alarma hoy 22:00"
         android:textColor="@color/Blanco" />
 
+    <EditText
+        android:id="@+id/et_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:inputType="datetime"
+        android:textAlignment="center"
+        android:textColor="#111111" />
+    <Button
+        android:id="@+id/btnAlarm2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/btn_animado"
+        android:text="Alarma hora X"
+        android:textColor="@color/Blanco" />
+
+
 </LinearLayout>

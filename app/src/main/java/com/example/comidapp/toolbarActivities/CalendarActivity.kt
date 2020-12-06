@@ -129,95 +129,38 @@ class CalendarActivity : AppCompatActivity() {
         //newFragment.show(supportFragmentManager, "Info")
         //bajaComida()
         //bajaDias()
-        try{
+        try {
             bajaShared2()
-            Log.i("comida2",comistrajos.toString())
-        }catch (e:Exception){}
-        try{
+            Log.i("comida2", comistrajos.toString())
+        } catch (e: Exception) {
+        }
+        try {
             actu = intent.getBooleanExtra("cambios", false)
-            if(actu){
+            if (actu) {
                 btnNoti.setBackgroundResource(R.color.colorAccent)
             }
-        }catch (e:Exception){}
+        } catch (e: Exception) {
+        }
 
-
-        /*btnActu.setOnClickListener {
-            if (!actu && semanaza.size != 0) {
-                llenaArray2()
-                setUpRecyclerView(sem1, rvSem1)
-                setUpRecyclerView2(sem2, rvSem2)
-                actu = true
-                btnActu.text = "Baja"
-            } else {
-                btnActu.isClickable = false
-                actu = false
-                try{
-                    bajaShared2()
-                }catch (e:Exception){}
-                //bajaComida()
-                //bajaDias()
-                /*val intent = Intent(this, Main2Activity::class.java)
-                startActivity(intent)*/
-            }
-        }*/
+        separaSemanas()
 
         btnGen1.setOnClickListener {
-            Log.i("comida2",comistrajos.toString())
-
-            semana1.clear()
-            for (i in 0..3){
-                semana1.add(calendario[i])
-            }
-            semana2.clear()
-            for (i in 4..6){
-                semana2.add(calendario[i])
-            }
             aleatorizaComida(semana1)
             aleatorizaComida(semana2)
-            val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-            //sharedPref.edit().remove("listadoDias").apply()
-            val intent = Intent(this, LoadActivity::class.java)
-            //startActivity(intent)
+
             setUpRecyclerView(semana1, rvSem1)
             setUpRecyclerView2(semana2, rvSem2)
         }
         btnGen2.setOnClickListener {
-            val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-            val jsonCom: String = sharedPref.getString("listadoCom", "")!!
-            Log.i("sharedd", jsonCom)
-            semana3.clear()
-            for (i in 7..10){
-                semana3.add(calendario[i])
-            }
-            semana4.clear()
-            for (i in 11..13){
-                semana4.add(calendario[i])
-            }
             aleatorizaComida(semana3)
             aleatorizaComida(semana4)
 
-            val json: String = sharedPref.getString("listadoDias", "")!!
-
-            Log.i("sharedd", json)
-            //sharedPref.edit().remove("listadoDias").apply()
-            val json2: String = sharedPref.getString("listadoDias", "")!!
-
-            Log.i("sharedd", "aa $json2")
-            val intent = Intent(this, LoadActivity::class.java)
-            //startActivity(intent)
             setUpRecyclerView3(semana3, rvSem3)
             setUpRecyclerView4(semana4, rvSem4)
         }
         btnGen3.setOnClickListener {
-            val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-            semana5.clear()
-            for (i in 14..17){
-                semana5.add(calendario[i])
-            }
             aleatorizaComida(semana5)
-            //sharedPref.edit().remove("listadoDias").apply()
-            val intent = Intent(this, LoadActivity::class.java)
-            //startActivity(intent)
+
             setUpRecyclerView5(semana5, rvSem5)
         }
 
@@ -230,15 +173,29 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        separaSemanas()
-
         btnNoti.setOnClickListener {
-            calendarioNuevo.clear()
+            Log.i("nuevo", calendarioNuevo.size.toString())
+            for (i in 0 until calendario.size) {
+                if (calendarioNuevo.size != 0) {
+                    var add = true
+                    for (j in 0 until calendarioNuevo.size) {
+                        if (calendario[i].fecha == calendarioNuevo[j].fecha) {
+                            add = false
+                        }
+                    }
+                    if (add) {
+                        calendarioNuevo.add(calendario[i])
+                    }
+                } else {
+                    calendarioNuevo.add(calendario[i])
+                }
+            }
+            /*calendarioNuevo.clear()
             calendarioNuevo.addAll(semana1)
             calendarioNuevo.addAll(semana2)
             calendarioNuevo.addAll(semana3)
             calendarioNuevo.addAll(semana4)
-            calendarioNuevo.addAll(semana5)
+            calendarioNuevo.addAll(semana5)*/
             val newFragment = SureFragment(calendarioNuevo)
             newFragment.show(supportFragmentManager, "Info")
             //enviaActualizacion()
@@ -473,7 +430,7 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     //Nuevo Generar comidas
-    fun aleatorizaComida(cambio:ArrayList<Dia>){
+    fun aleatorizaComida(cambio: ArrayList<Dia>) {
         val nuevo = arrayListOf<Dia>()
         for (i in 0 until cambio.size) {
             val a = (0 until comistrajos.size).random()
@@ -496,34 +453,52 @@ class CalendarActivity : AppCompatActivity() {
         }
         cambio.clear()
         cambio.addAll(nuevo)
+        for (i in 0 until cambio.size) {
+            if (calendarioNuevo.size != 0) {
+                var add = true
+                for (j in 0 until calendarioNuevo.size) {
+                    if (cambio[i].fecha == calendarioNuevo[j].fecha) {
+                        calendarioNuevo[j] = cambio[i]
+                        add = false
+                    }
+                }
+                if (add) {
+                    calendarioNuevo.add(cambio[i])
+                }
+            } else {
+                calendarioNuevo.add(cambio[i])
+            }
+        }
+        actu = true
+        btnNoti.setBackgroundResource(R.color.colorAccent)
     }
 
-    fun separaSemanas(){
+    fun separaSemanas() {
         semana1.clear()
         semana2.clear()
         semana3.clear()
         semana4.clear()
         semana5.clear()
-        for (i in 0..3){
+        for (i in 0..3) {
             semana1.add(calendario[i])
         }
-        for (i in 4..6){
+        for (i in 4..6) {
             semana2.add(calendario[i])
         }
-        for (i in 7..10){
+        for (i in 7..10) {
             semana3.add(calendario[i])
         }
-        for (i in 11..13){
+        for (i in 11..13) {
             semana4.add(calendario[i])
         }
-        for (i in 14..17){
+        for (i in 14..17) {
             semana5.add(calendario[i])
         }
-        setUpRecyclerView(semana1,rvSem1)
-        setUpRecyclerView2(semana2,rvSem2)
-        setUpRecyclerView3(semana3,rvSem3)
-        setUpRecyclerView4(semana4,rvSem4)
-        setUpRecyclerView5(semana5,rvSem5)
+        setUpRecyclerView(semana1, rvSem1)
+        setUpRecyclerView2(semana2, rvSem2)
+        setUpRecyclerView3(semana3, rvSem3)
+        setUpRecyclerView4(semana4, rvSem4)
+        setUpRecyclerView5(semana5, rvSem5)
 
     }
 
@@ -551,7 +526,7 @@ class CalendarActivity : AppCompatActivity() {
             }
         }
 
-    fun enviaActualizacion(){
+    fun enviaActualizacion() {
         val title = "Maison"
         try {
             bajaShared()

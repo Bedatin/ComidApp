@@ -59,11 +59,17 @@ class MensajeActivity : AppCompatActivity() {
                     sendNotification(it)
                 }
             }
+            et_mensaje.text.clear()
         }
 
 
         btnAlarm.setOnClickListener {
             alarma2()
+        }
+
+        btnAlarm2.setOnClickListener {
+            alarma3()
+            et_time.text.clear()
         }
 
 
@@ -113,7 +119,7 @@ class MensajeActivity : AppCompatActivity() {
                 val hora = System.currentTimeMillis()
         Log.i("hora", hora.toString())
         val h = LocalDateTime.now().hour
-        val m = LocalDateTime.now().minute +2
+        val m = LocalDateTime.now().minute
         val s =  LocalDateTime.now().second
         val t= h.toLong()*3600000 + m.toLong()*60000 + s*1000
         val tiempo = 20*3600000L + 39*60000L
@@ -123,10 +129,32 @@ class MensajeActivity : AppCompatActivity() {
         Log.i("hora", "3 " + SystemClock.setCurrentTimeMillis(200L).toString())
         Log.i("hora", "4 " + System.currentTimeMillis().toString())
         //alarmManager.set(AlarmManager.RTC_WAKEUP,tiempo,pendingIntent)
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+3000000, pendingIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+tiempazo, pendingIntent)
     }
 
+    fun alarma3(){
+        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent: PendingIntent
+        pendingIntent = PendingIntent.getBroadcast(
+            this, 1000, alarmIntent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
 
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val hora = System.currentTimeMillis()
+        Log.i("hora", hora.toString())
+        val et = et_time.text.toString().toCharArray()
+        val hh = (et[0].toString()+ et[1]).toInt()
+        val mm = (et[3].toString()+ et[4]).toInt()
+        val ss = (et[6].toString()+ et[7]).toInt()
+        val h =  LocalDateTime.now().hour
+        val m =  LocalDateTime.now().minute
+        val s =  LocalDateTime.now().second
+        val t= (hh-h)*3600000 + (mm-m).toLong()*60000 + (ss-s)*1000
+        Log.i("hora", "$hh, $mm,$ss")
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,tiempo,pendingIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+t, pendingIntent)
+    }
     fun alarma(){
         val alarmManager =
             this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
