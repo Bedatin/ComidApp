@@ -173,6 +173,7 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        
         btnNoti.setOnClickListener {
             Log.i("nuevo", calendarioNuevo.size.toString())
             for (i in 0 until calendario.size) {
