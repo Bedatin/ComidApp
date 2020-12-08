@@ -134,34 +134,88 @@ class CalendarActivity : AppCompatActivity() {
             Log.i("comida2", comistrajos.toString())
         } catch (e: Exception) {
         }
-        try {
+        if (!actu) {
+            separaSemanas(calendario)
+            calendarioNuevo.clear()
+            calendarioNuevo.addAll(calendario)
+        } else {
+            separaSemanas(calendarioNuevo)
+        }
+
+        /*try {
             actu = intent.getBooleanExtra("cambios", false)
             if (actu) {
+                val n1 = intent.getStringExtra("nuevoFecha") as String
+                val n2 = intent.getStringExtra("nuevoDia")as String
+                val n3 = intent.getStringExtra("nuevoComida")as String
+                val n4 = intent.getStringExtra("nuevoCena")as String
+                val nueva = Dia(n1,n2,n3,n4)
+                calendarioNuevo.add(nueva)
+                val nOrden = intent.getStringExtra("orden")as String
+                val n = nOrden.toInt()
+                if(n in 0..3){
+                    for (i in 0..3) {
+                        if (semana1[i].fecha == nueva.fecha){
+                            semana1[i]=nueva
+                        }
+                    }
+                }
+                if(n in 4..6){
+                    for (i in 4..6) {
+                        if (semana2[i].fecha == nueva.fecha){
+                            semana2[i]=nueva
+                        }
+                    }
+                }
+                if(n in 7..10){
+                    for (i in 7..10) {
+                        if (semana3[i].fecha == nueva.fecha) {
+                            semana3[i] = nueva
+                        }
+                    }
+                }
+                if(n in 11..13){
+                    for (i in 11..13) {
+                        if (semana4[i].fecha == nueva.fecha) {
+                            semana4[i] = nueva
+                        }
+                    }
+                }
+                if(n in 14..17){
+                    for (i in 14..17) {
+                        if (semana5[i].fecha == nueva.fecha) {
+                            semana5[i] = nueva
+                        }
+                    }
+                }
+                reciclar(semana1,semana2,semana3,semana4,semana5)
                 btnNoti.setBackgroundResource(R.color.colorAccent)
             }
         } catch (e: Exception) {
-        }
+        }*/
 
-        separaSemanas()
 
         btnGen1.setOnClickListener {
             aleatorizaComida(semana1)
             aleatorizaComida(semana2)
-
+            shareInfo(true)
             setUpRecyclerView(semana1, rvSem1)
             setUpRecyclerView2(semana2, rvSem2)
+            btnNoti.setBackgroundResource(R.color.colorAccent)
         }
         btnGen2.setOnClickListener {
             aleatorizaComida(semana3)
             aleatorizaComida(semana4)
-
+            shareInfo(true)
             setUpRecyclerView3(semana3, rvSem3)
             setUpRecyclerView4(semana4, rvSem4)
+            btnNoti.setBackgroundResource(R.color.colorAccent)
         }
         btnGen3.setOnClickListener {
             aleatorizaComida(semana5)
-
+            shareInfo(true)
             setUpRecyclerView5(semana5, rvSem5)
+            btnNoti.setBackgroundResource(R.color.colorAccent)
         }
 
         btnLista.setOnClickListener {
@@ -173,7 +227,7 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        
+
         btnNoti.setOnClickListener {
             Log.i("nuevo", calendarioNuevo.size.toString())
             for (i in 0 until calendario.size) {
@@ -197,70 +251,17 @@ class CalendarActivity : AppCompatActivity() {
             calendarioNuevo.addAll(semana3)
             calendarioNuevo.addAll(semana4)
             calendarioNuevo.addAll(semana5)*/
-            val newFragment = SureFragment(calendarioNuevo)
+            val newFragment = SureFragment(calendario, calendarioNuevo, "sure")
             newFragment.show(supportFragmentManager, "Info")
             //enviaActualizacion()
         }
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-
-        val searchView = menu?.findItem(R.id.app_bar_search)?.actionView as SearchView
-        searchView.setOnCloseListener {
-
-            //setUpRecyclerView(series)
-            false
-        }
-        /*val queryTextListener = object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(textoEscrito: String?): Boolean {
-                //TODO Cuando se pulsa en el boton de buscar del teclado entra aqui
-                if (textoEscrito != null) {
-                    seriesFiltradas = seriesFiltradas.filter { it.title.contains(textoEscrito, true) || it.year.toString().contains(textoEscrito, true)} as ArrayList<Series>
-                    setUpRecyclerView(seriesFiltradas)
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(textoEscrito: String?): Boolean {
-                //TODO Cada vez que escribimos una letra entra aqui
-                Log.i(TAG, "onQueryTextChange $textoEscrito")
-
-                seriesFiltradas = seriesFiltradas.filter { it.title.contains(textoEscrito!!, true) || it.year.toString().contains(textoEscrito, true)} as ArrayList<Series>
-                setUpRecyclerView(seriesFiltradas)
-                return false
-            }
-        }
-        searchView.setOnQueryTextListener(queryTextListener)*/
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    @SuppressLint("ResourceType")
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_add -> {
-                llenaArray2()
-                /*sem1.addAll(arrayDias)
-                Log.i("dias", sem1[0].dia + sem1[1].dia + sem1[2].dia + sem1[3].dia)*/
-                setUpRecyclerView(sem1, rvSem1)
-                setUpRecyclerView2(sem2, rvSem2)
-                setUpRecyclerView3(sem1, rvSem3)
-                setUpRecyclerView4(sem2, rvSem4)
-            }
-            R.id.calendario -> {
-                val intent = Intent(this, CalendarActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.listado -> {
-                val intent = Intent(this, ListadoActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.reglas -> {
-                val intent = Intent(this, ReglasActivity::class.java)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item!!)
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val newFragment = SureFragment(calendario, calendarioNuevo, "exit")
+        newFragment.show(supportFragmentManager, "Info")
     }
 
     //Reciclers
@@ -270,12 +271,12 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter = CalendarAdapder {
+            shareInfo(true)
             val intent = Intent(this, DiaInfo::class.java)
             intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
-            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
             this.finish()
         }
@@ -290,12 +291,12 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView2.layoutManager =
             LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter2 = CalendarAdapder2 {
+            shareInfo(true)
             val intent = Intent(this, DiaInfo::class.java)
             intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
-            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
             this.finish()
         }
@@ -310,12 +311,12 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView3.layoutManager =
             LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter3 = CalendarAdapder3 {
+            shareInfo(true)
             val intent = Intent(this, DiaInfo::class.java)
             intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
-            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
             this.finish()
         }
@@ -330,12 +331,12 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView4.layoutManager =
             LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter4 = CalendarAdapder4 {
+            shareInfo(true)
             val intent = Intent(this, DiaInfo::class.java)
             intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
-            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
             this.finish()
         }
@@ -350,17 +351,25 @@ class CalendarActivity : AppCompatActivity() {
         mRecyclerView5.layoutManager =
             LinearLayoutManager(this, OrientationHelper.HORIZONTAL, false)
         mAdapter5 = CalendarAdapder5 {
+            shareInfo(true)
             val intent = Intent(this, DiaInfo::class.java)
             intent.putExtra("fecha", it.fecha)
             intent.putExtra("dia", it.dia)
             intent.putExtra("comida", it.comida)
             intent.putExtra("cena", it.cena)
-            intent.putExtra("orden", calendario.indexOf(it).toString())
             startActivity(intent)
             this.finish()
         }
         mAdapter5.RecyclerAdapter(lista, this, trampa)
         mRecyclerView5.adapter = mAdapter5
+    }
+
+    fun reciclar(q: List<Dia>, w: List<Dia>, e: List<Dia>, r: List<Dia>, t: List<Dia>) {
+        setUpRecyclerView(q, rvSem1)
+        setUpRecyclerView2(w, rvSem2)
+        setUpRecyclerView3(e, rvSem3)
+        setUpRecyclerView4(r, rvSem4)
+        setUpRecyclerView5(t, rvSem5)
     }
 
     //Generar comidas
@@ -384,50 +393,6 @@ class CalendarActivity : AppCompatActivity() {
             )
             listita.add(ar1)
         }
-    }
-
-    fun llenaArray() {
-        sem1.clear()
-        sem2.clear()
-        generaComida()
-        sem1.add(listita[0])
-        sem1.add(listita[1])
-        sem1.add(listita[2])
-        sem1.add(listita[3])
-        sem2.add(listita[4])
-        sem2.add(listita[5])
-        sem2.add(listita[6])
-        for (i in 0 until listita.size) {
-            val diita =
-                Dia(listita[i].fecha, listita[i].dia, listita[i].comida, listita[i].cena)
-            //saveComida(diita)
-        }
-        val newFragment = SureFragment(listita)
-        newFragment.show(supportFragmentManager, "Info")
-        //setUpRecyclerView(sem1, rvSem1)
-        //setUpRecyclerView2(sem2, rvSem2)
-    }
-
-    fun llenaArray2() {
-        sem1.clear()
-        sem2.clear()
-        if (semanaza.size != 0) {
-            Log.i("dias", semanaza.toString())
-            sem1.add(semanaza[0])
-            sem1.add(semanaza[1])
-            sem1.add(semanaza[2])
-            sem1.add(semanaza[3])
-            sem2.add(semanaza[4])
-            sem2.add(semanaza[5])
-            sem2.add(semanaza[6])
-
-        }
-        if (comistrajos.size != 0) {
-            Log.i("dias", comistrajos.toString())
-        }
-        //setUpRecyclerView(sem1, rvSem1)
-        //setUpRecyclerView2(sem2, rvSem2)
-
     }
 
     //Nuevo Generar comidas
@@ -474,33 +439,32 @@ class CalendarActivity : AppCompatActivity() {
         btnNoti.setBackgroundResource(R.color.colorAccent)
     }
 
-    fun separaSemanas() {
+    fun separaSemanas(origen: ArrayList<Dia>) {
         semana1.clear()
         semana2.clear()
         semana3.clear()
         semana4.clear()
         semana5.clear()
         for (i in 0..3) {
-            semana1.add(calendario[i])
+            semana1.add(origen[i])
         }
         for (i in 4..6) {
-            semana2.add(calendario[i])
+            semana2.add(origen[i])
         }
         for (i in 7..10) {
-            semana3.add(calendario[i])
+            semana3.add(origen[i])
         }
         for (i in 11..13) {
-            semana4.add(calendario[i])
+            semana4.add(origen[i])
         }
         for (i in 14..17) {
-            semana5.add(calendario[i])
+            semana5.add(origen[i])
         }
         setUpRecyclerView(semana1, rvSem1)
         setUpRecyclerView2(semana2, rvSem2)
         setUpRecyclerView3(semana3, rvSem3)
         setUpRecyclerView4(semana4, rvSem4)
         setUpRecyclerView5(semana5, rvSem5)
-
     }
 
     //Firebase
@@ -554,11 +518,23 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     //Shared
+    fun shareInfo(actualiza: Boolean) {
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        val gson = Gson()
+        val json2 = gson.toJson(calendarioNuevo)
+        editor.apply {
+            putBoolean("actu", actualiza)
+            putString("listadoDiasNuevos", json2)
+            apply()
+        }
+    }
+
     fun bajaShared() {
         //Shared
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        var emailId = ""
-        emailId = sharedPref.getString("emailId", "")!!
+        val emailId = sharedPref.getString("emailId", "")!!
         id = emailId
     }
 
@@ -579,7 +555,16 @@ class CalendarActivity : AppCompatActivity() {
         val listaDias: List<Dia> = gson2.fromJson(json2, type2)
         semanaza.addAll(listaDias)
         calendario.addAll(listaDias)
-        llenaArray2()
+
+        val gson3 = Gson()
+        val json3: String = sharedPref.getString("listadoDiasNuevos", "")!!
+        val type3: Type = object : TypeToken<List<Dia?>?>() {}.type
+        val listaDiasNuevos: List<Dia> = gson3.fromJson(json3, type3)
+        calendarioNuevo.addAll(listaDiasNuevos)
+
+        val hayCambios = sharedPref.getBoolean("actu", false)
+        actu = hayCambios
+
     }
 
 

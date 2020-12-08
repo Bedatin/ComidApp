@@ -60,7 +60,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/btnToque"
+        android:id="@+id/btnMensaje"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"

@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class SureFragment(var dias :ArrayList<Dia>) : DialogFragment() {
+class SureFragment(var calendario :ArrayList<Dia>,var calendarioNuevo :ArrayList<Dia>, var accion:String) : DialogFragment() {
 
     val diaRef = Firebase.firestore.collection("Dia")
     override fun onCreateView(
@@ -35,26 +35,40 @@ class SureFragment(var dias :ArrayList<Dia>) : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("myApp", dias.toString())
-        btnSi.setOnClickListener {
-            //activity?.finish()
-            for (i in 0 until dias.size) {
-                val diita =
-                    Dia(dias[i].fecha, dias[i].dia, dias[i].comida, dias[i].cena)
-                saveComida(diita)
+        Log.i("myApp", calendarioNuevo.toString())
+        if (accion == "sure"){
+            tvSure.text = "¿Grabar cambios?"
+            btnSi.setOnClickListener {
+                //activity?.finish()
+                for (i in 0 until calendarioNuevo.size) {
+                    val diita =
+                        Dia(calendarioNuevo[i].fecha, calendarioNuevo[i].dia, calendarioNuevo[i].comida, calendarioNuevo[i].cena)
+                    saveComida(diita)
+                }
+                val sharedPref = activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
+                sharedPref?.edit()?.remove("listadoDias")?.apply()
+                dismiss()
+                val intent = Intent(context, LoadActivity::class.java)
+                intent.putExtra("notificationS", true)
+                startActivity(intent)
             }
-            val sharedPref = activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
-            sharedPref?.edit()?.remove("listadoDias")?.apply()
-            dismiss()
-            val intent = Intent(context, LoadActivity::class.java)
-            intent.putExtra("notificationS", true)
-            startActivity(intent)
-        }
 
-        btnNo.setOnClickListener {
-            dismiss()
+            btnNo.setOnClickListener {
+                dismiss()
+            }
         }
-
+        else if(accion == "exit"){
+            tvSure.text = "¿Salir sin guardar?"
+            btnSi.setOnClickListener {
+                val sharedPref = activity?.getSharedPreferences("myPref", Context.MODE_PRIVATE)
+                sharedPref?.edit()?.remove("listadoDiasNuevos")?.apply()
+                dismiss()
+                activity?.finish()
+            }
+            btnNo.setOnClickListener {
+                dismiss()
+            }
+        }
 
     }
 

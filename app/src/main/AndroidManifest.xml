@@ -51,6 +51,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".toolbarActivities.DiaInfo"
+            android:parentActivityName=".toolbarActivities.CalendarActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".toolbarActivities.ComidaInfo"
@@ -63,6 +64,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".toolbarActivities.CalendarActivity"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".copiaEOI.AddTaskActivity"

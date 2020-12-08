@@ -31,7 +31,7 @@ class DiaInfo : AppCompatActivity() {
     val diaRef = Firebase.firestore.collection("Dia")
     val comidaRef = Firebase.firestore.collection("comida")
 
-    var calendario: ArrayList<Dia> = arrayListOf()
+    var calendarioNuevo: ArrayList<Dia> = arrayListOf()
 
     val arrayDocsCom = arrayListOf<String>()
     val arrayCom = arrayListOf<Comida>()
@@ -54,7 +54,6 @@ class DiaInfo : AppCompatActivity() {
         val dia = intent.extras?.getSerializable("dia") as String
         val comida = intent.extras?.getSerializable("comida") as String
         val cena = intent.extras?.getSerializable("cena") as String
-        val orden = intent.extras?.getSerializable("orden") as String
 
 
         val num1 = fecha.substring(8, 10)
@@ -94,23 +93,40 @@ class DiaInfo : AppCompatActivity() {
         btnSubeCambio.setOnClickListener {
             val nuevaComida = if (etComida.text.isNotEmpty()) {
                 etComida.text
-            }else{
+            } else {
                 tvComida.text
             }
             val nuevaCena = if (etCena.text.isNotEmpty()) {
                 etCena.text
-            }else{
+            } else {
                 tvCena.text
             }
-            val nuevo = Dia(fecha,dia,nuevaComida.toString(), nuevaCena.toString())
+            val nuevo = Dia(fecha, dia, nuevaComida.toString(), nuevaCena.toString())
             //saveComida(nuevo)
-            calendario[orden.toInt()] = nuevo
+            //calendario[orden.toInt()] = nuevo
+            //enviaInfo()
+            for (i in 0 until calendarioNuevo.size) {
+                if (nuevo.fecha == calendarioNuevo[i].fecha) {
+                    calendarioNuevo[i] = nuevo
+                }
+            }
+            shareInfo(true)
             enviaInfo()
+            /*val intent = Intent(this, CalendarActivity::class.java)
+            intent.putExtra("cambios", true)
+            startActivity(intent)*/
             finish()
         }
     }
 
-    fun buscador(){
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val intent = Intent(this, CalendarActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun buscador() {
         searchV.setOnCloseListener {
             setUpRecyclerView(comistrajos)
             false
@@ -204,25 +220,34 @@ class DiaInfo : AppCompatActivity() {
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
 
         val gson2 = Gson()
-        val json2: String = sharedPref.getString("listadoDias", "")!!
+        val json2: String = sharedPref.getString("listadoDiasNuevos", "")!!
         val type2: Type = object : TypeToken<List<Dia?>?>() {}.type
         val listaDias: List<Dia> = gson2.fromJson(json2, type2)
-        calendario.addAll(listaDias)
+        calendarioNuevo.addAll(listaDias)
     }
 
     fun enviaInfo() {
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
         val gson = Gson()
-        val json2 = gson.toJson(calendario)
+        val json2 = gson.toJson(calendarioNuevo)
         editor.apply {
-            putString("listadoDias", json2)
+            putString("listadoDiasNuevos", json2)
             apply()
         }
         val intent = Intent(this, CalendarActivity::class.java)
         intent.putExtra("cambios", true)
         startActivity(intent)
+    }
 
+    fun shareInfo(actualiza: Boolean) {
+        //Shared
+        val sharedPref= getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.apply {
+            putBoolean("actu", actualiza)
+            apply()
+        }
     }
 
     fun saveComida(dia: Dia) = CoroutineScope(Dispatchers.IO).launch {

@@ -84,6 +84,7 @@ class LoadActivity : AppCompatActivity() {
     var lunes = LocalDate.now()
     var calendarioBajar: ArrayList<String> = arrayListOf()
     var calendario: ArrayList<Dia> = arrayListOf()
+    var calendarioNuevo: ArrayList<Dia> = arrayListOf()
     var comistrajos: ArrayList<Comida> = ArrayList()
 
 
@@ -194,6 +195,7 @@ class LoadActivity : AppCompatActivity() {
         try {
             ordena = sumaDias.sortedBy { it.fecha }
             calendario.addAll(ordena)
+            calendarioNuevo.addAll(ordena)
             //Log.i("dias", "array2 ${listadoDias[0].dia}")
         } catch (e: Exception) {
         }
@@ -224,6 +226,12 @@ class LoadActivity : AppCompatActivity() {
         val type2: Type = object : TypeToken<List<Dia?>?>() {}.type
         val listaDias: List<Dia> = gson2.fromJson(json2, type2)
         calendario.addAll(listaDias)
+
+        val gson3 = Gson()
+        val json3: String = sharedPref.getString("listadoDias", "")!!
+        val type3: Type = object : TypeToken<List<Dia?>?>() {}.type
+        val listaDiasNuevos: List<Dia> = gson3.fromJson(json3, type3)
+        calendarioNuevo.addAll(listaDiasNuevos)
     }
 
     fun enviaInfo() {
@@ -232,9 +240,11 @@ class LoadActivity : AppCompatActivity() {
         val gson = Gson()
         val json1 = gson.toJson(listadoComida)
         val json2 = gson.toJson(calendario)
+        val json3 = gson.toJson(calendarioNuevo)
         editor.apply {
             putString("listadoComida", json1)
             putString("listadoDias", json2)
+            putString("listadoDiasNuevos", json3)
             apply()
         }
         val intent = Intent(this, MainActivity::class.java)
