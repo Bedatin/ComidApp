@@ -8,21 +8,34 @@
     android:orientation="vertical"
     tools:context=".toolbarActivities.ListadoActivity">
 
-    <TextView
-        android:id="@+id/tvTitulo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:gravity="center_horizontal"
-        android:text="Listado"
-        android:textColor="@color/Negro"
-        android:textSize="35sp" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRefrescar"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_refresh" />
+
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:text="Listado   "
+            android:textColor="@color/Negro"
+            android:textSize="35sp" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchV"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:background="@color/verdeClaro"/>
+        android:background="@color/verdeClaro" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,10 +55,10 @@
             <Button
                 android:id="@+id/btnComida"
                 android:layout_width="100dp"
-                android:layout_margin="10dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:background="@color/verdeClaro"
-                android:text="Comdida"
+                android:text="Comida"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
 
@@ -53,7 +66,7 @@
                 android:id="@+id/btnTipo"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/verdeClaro"
                 android:text="Tipo"
                 android:textColor="@color/Blanco"
@@ -63,9 +76,19 @@
                 android:id="@+id/btnTiempo"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/verdeClaro"
                 android:text="Tiempo"
+                android:textColor="@color/Blanco"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnX2"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/verdeClaro"
+                android:text="x2"
                 android:textColor="@color/Blanco"
                 android:textStyle="bold" />
 
@@ -73,10 +96,9 @@
                 android:id="@+id/btnAdd"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:background="@color/Blanco"
-                android:src="@drawable/ic_add_box"
-                />
+                android:src="@drawable/ic_add_box" />
 
         </LinearLayout>
 
@@ -87,27 +109,5 @@
             app:layout_constraintTop_toBottomOf="@id/arriba"
             tools:listitem="@layout/item_comida" />
 
-
-        <Button
-            android:id="@+id/fab2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="200dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/btn_carta"
-            android:src="@drawable/ic_launcher_foreground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="300dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/btn_carta"
-            android:src="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

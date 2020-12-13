@@ -2,8 +2,11 @@ package com.example.comidapp.copiaEOI
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import com.example.comidapp.Comida
 import com.example.comidapp.DataManager.db
 import com.example.comidapp.R
@@ -40,6 +43,8 @@ class AddTaskActivity : AppCompatActivity() {
     private val TAG = "StorageActivity"
     private val CHOOSING_IMAGE_REQUEST = 1234
 
+    var dupli = false
+    var tipo = "Otros"
     var tiempo2 = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,15 +67,29 @@ class AddTaskActivity : AppCompatActivity() {
         rbCena.setOnClickListener {
             tiempo2 = 2
         }
+        Log.i("radio", rgTipo.checkedRadioButtonId.toString())
+
+        rgTipo.setOnCheckedChangeListener { group, checkedId ->
+            val selection: RadioButton = findViewById(checkedId)
+            tipo = selection.text.toString()
+        }
+
+        cbDupli.setOnCheckedChangeListener { buttonView, isChecked ->
+            dupli = isChecked
+        }
 
         btnAddtask.setOnClickListener {
             //createTaskInFirebase()
-            val comida = etComida.text.toString()
-            val tipo = etTipo.text.toString()
-            val id = comida + tipo + tiempo2.toString()
-            val comidita = Comida(id, comida, tipo, tiempo2)
-            saveComida(comidita)
-            this.finish()
+            if (etComida.text.isNotEmpty() && rgTipo.checkedRadioButtonId >= 0) {
+                val comida = etComida.text.toString()
+                //val tipo = etTipo.text.toString()
+                val id = comida + tipo + tiempo2.toString()
+                val comidita = Comida(id, comida, tipo, tiempo2, dupli)
+                saveComida(comidita)
+                finish()
+            } else {
+                Toast.makeText(this, "Introduzca todos los datos", Toast.LENGTH_LONG).show()
+            }
         }
 
 
@@ -110,9 +129,9 @@ class AddTaskActivity : AppCompatActivity() {
               //  Toast.makeText(this@AddTaskActivity, "OK", Toast.LENGTH_LONG).show()
             }*/
         } catch (e: Exception) {
-           /* withContext(Dispatchers.Main) {
-                Toast.makeText(this@AddTaskActivity, e.message, Toast.LENGTH_LONG).show()
-            }*/
+            /* withContext(Dispatchers.Main) {
+                 Toast.makeText(this@AddTaskActivity, e.message, Toast.LENGTH_LONG).show()
+             }*/
         }
     }
 

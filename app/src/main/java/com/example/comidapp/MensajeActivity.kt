@@ -27,7 +27,6 @@ import java.time.LocalTime
 import java.util.*
 
 
-const val TOPIC = "/topics/Maison"
 
 class MensajeActivity : AppCompatActivity() {
 

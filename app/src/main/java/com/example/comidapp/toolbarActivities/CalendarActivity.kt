@@ -116,7 +116,7 @@ class CalendarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
         //setSupportActionBar(toolbar)
-
+        Log.i("comidas", semana1.toString())
         tvTitulo.typeface = Typeface.createFromAsset(assets, "fonts/CURSHT.TTF")
 
         bajaComida()
@@ -131,68 +131,21 @@ class CalendarActivity : AppCompatActivity() {
         //bajaDias()
         try {
             bajaShared2()
-            Log.i("comida2", comistrajos.toString())
+
         } catch (e: Exception) {
         }
+        Log.i("comidas", "OR: $calendario")
+        Log.i("comidas", "NU: $calendarioNuevo")
         if (!actu) {
             separaSemanas(calendario)
             calendarioNuevo.clear()
             calendarioNuevo.addAll(calendario)
+            Log.i("comidas", "vacio")
         } else {
             separaSemanas(calendarioNuevo)
+            btnNoti.setBackgroundResource(R.color.colorAccent)
+            Log.i("comidas", "lleno")
         }
-
-        /*try {
-            actu = intent.getBooleanExtra("cambios", false)
-            if (actu) {
-                val n1 = intent.getStringExtra("nuevoFecha") as String
-                val n2 = intent.getStringExtra("nuevoDia")as String
-                val n3 = intent.getStringExtra("nuevoComida")as String
-                val n4 = intent.getStringExtra("nuevoCena")as String
-                val nueva = Dia(n1,n2,n3,n4)
-                calendarioNuevo.add(nueva)
-                val nOrden = intent.getStringExtra("orden")as String
-                val n = nOrden.toInt()
-                if(n in 0..3){
-                    for (i in 0..3) {
-                        if (semana1[i].fecha == nueva.fecha){
-                            semana1[i]=nueva
-                        }
-                    }
-                }
-                if(n in 4..6){
-                    for (i in 4..6) {
-                        if (semana2[i].fecha == nueva.fecha){
-                            semana2[i]=nueva
-                        }
-                    }
-                }
-                if(n in 7..10){
-                    for (i in 7..10) {
-                        if (semana3[i].fecha == nueva.fecha) {
-                            semana3[i] = nueva
-                        }
-                    }
-                }
-                if(n in 11..13){
-                    for (i in 11..13) {
-                        if (semana4[i].fecha == nueva.fecha) {
-                            semana4[i] = nueva
-                        }
-                    }
-                }
-                if(n in 14..17){
-                    for (i in 14..17) {
-                        if (semana5[i].fecha == nueva.fecha) {
-                            semana5[i] = nueva
-                        }
-                    }
-                }
-                reciclar(semana1,semana2,semana3,semana4,semana5)
-                btnNoti.setBackgroundResource(R.color.colorAccent)
-            }
-        } catch (e: Exception) {
-        }*/
 
 
         btnGen1.setOnClickListener {
@@ -200,21 +153,21 @@ class CalendarActivity : AppCompatActivity() {
             aleatorizaComida(semana2)
             shareInfo(true)
             setUpRecyclerView(semana1, rvSem1)
-            setUpRecyclerView2(semana2, rvSem2)
+            setUpRecyclerView(semana2, rvSem2)
             btnNoti.setBackgroundResource(R.color.colorAccent)
         }
         btnGen2.setOnClickListener {
             aleatorizaComida(semana3)
             aleatorizaComida(semana4)
             shareInfo(true)
-            setUpRecyclerView3(semana3, rvSem3)
-            setUpRecyclerView4(semana4, rvSem4)
+            setUpRecyclerView(semana3, rvSem3)
+            setUpRecyclerView(semana4, rvSem4)
             btnNoti.setBackgroundResource(R.color.colorAccent)
         }
         btnGen3.setOnClickListener {
             aleatorizaComida(semana5)
             shareInfo(true)
-            setUpRecyclerView5(semana5, rvSem5)
+            setUpRecyclerView(semana5, rvSem5)
             btnNoti.setBackgroundResource(R.color.colorAccent)
         }
 
@@ -245,12 +198,6 @@ class CalendarActivity : AppCompatActivity() {
                     calendarioNuevo.add(calendario[i])
                 }
             }
-            /*calendarioNuevo.clear()
-            calendarioNuevo.addAll(semana1)
-            calendarioNuevo.addAll(semana2)
-            calendarioNuevo.addAll(semana3)
-            calendarioNuevo.addAll(semana4)
-            calendarioNuevo.addAll(semana5)*/
             val newFragment = SureFragment(calendario, calendarioNuevo, "sure")
             newFragment.show(supportFragmentManager, "Info")
             //enviaActualizacion()
@@ -260,8 +207,14 @@ class CalendarActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         //super.onBackPressed()
-        val newFragment = SureFragment(calendario, calendarioNuevo, "exit")
-        newFragment.show(supportFragmentManager, "Info")
+        if(actu){
+            val newFragment = SureFragment(calendario, calendarioNuevo, "exit")
+            newFragment.show(supportFragmentManager, "Info")
+        }
+        else{
+            finish()
+        }
+
     }
 
     //Reciclers
@@ -372,29 +325,6 @@ class CalendarActivity : AppCompatActivity() {
         setUpRecyclerView5(t, rvSem5)
     }
 
-    //Generar comidas
-    fun generaComida() {
-        listita.clear()
-        for (i in 0..6) {
-            val a = (0 until comistrajos.size).random()
-            var b = true
-            var c: Int
-            do {
-                c = (0 until comistrajos.size).random()
-                if (a != c) {
-                    b = false
-                }
-            } while (b)
-            val ar1 = Dia(
-                LocalDate.now().plusDays((i - 6).toLong()).toString(),
-                semana[i],
-                comistrajos[a].comida,
-                comistrajos[c].comida
-            )
-            listita.add(ar1)
-        }
-    }
-
     //Nuevo Generar comidas
     fun aleatorizaComida(cambio: ArrayList<Dia>) {
         val nuevo = arrayListOf<Dia>()
@@ -419,6 +349,59 @@ class CalendarActivity : AppCompatActivity() {
         }
         cambio.clear()
         cambio.addAll(nuevo)
+
+        //Añado al array de cambios
+        for (i in 0 until cambio.size) {
+            if (calendarioNuevo.size != 0) {
+                var add = true
+                for (j in 0 until calendarioNuevo.size) {
+                    if (cambio[i].fecha == calendarioNuevo[j].fecha) {
+                        calendarioNuevo[j] = cambio[i]
+                        add = false
+                    }
+                }
+                if (add) {
+                    calendarioNuevo.add(cambio[i])
+                }
+            } else {
+                calendarioNuevo.add(cambio[i])
+            }
+        }
+        actu = true
+        btnNoti.setBackgroundResource(R.color.colorAccent)
+    }
+
+    fun aleatorizaComidaReglada(cambio: ArrayList<Dia>) {
+        var ordenCambio = 0
+        for (i in 0 until calendarioNuevo.size){
+            if(calendarioNuevo[i].fecha == cambio[1].fecha){
+                ordenCambio = i
+            }
+        }
+        val nuevo = arrayListOf<Dia>()
+        for (i in 0 until cambio.size) {
+            val a = (0 until comistrajos.size).random()
+            var b = true
+            var c: Int
+            do {
+                c = (0 until comistrajos.size).random()
+                if (a != c) {
+                    b = false
+                }
+            } while (b)
+            val ar1 = Dia(
+                cambio[i].fecha,
+                cambio[i].dia,
+                comistrajos[a].comida,
+                comistrajos[c].comida
+            )
+            nuevo.add(ar1)
+            //saveComida(ar1)
+        }
+        cambio.clear()
+        cambio.addAll(nuevo)
+
+        //Añado al array de cambios
         for (i in 0 until cambio.size) {
             if (calendarioNuevo.size != 0) {
                 var add = true
@@ -461,10 +444,10 @@ class CalendarActivity : AppCompatActivity() {
             semana5.add(origen[i])
         }
         setUpRecyclerView(semana1, rvSem1)
-        setUpRecyclerView2(semana2, rvSem2)
-        setUpRecyclerView3(semana3, rvSem3)
-        setUpRecyclerView4(semana4, rvSem4)
-        setUpRecyclerView5(semana5, rvSem5)
+        setUpRecyclerView(semana2, rvSem2)
+        setUpRecyclerView(semana3, rvSem3)
+        setUpRecyclerView(semana4, rvSem4)
+        setUpRecyclerView(semana5, rvSem5)
     }
 
     //Firebase
@@ -598,6 +581,10 @@ class CalendarActivity : AppCompatActivity() {
         } catch (e: Exception) {
         }
         Log.i("comida2", "baja $comistrajos")
+
+    }
+
+    fun reglas(){
 
     }
 }

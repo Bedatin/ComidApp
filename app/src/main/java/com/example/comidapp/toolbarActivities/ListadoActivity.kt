@@ -1,11 +1,15 @@
 package com.example.comidapp.toolbarActivities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_listado.*
 import kotlinx.android.synthetic.main.activity_listado.tvTitulo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.reflect.Type
@@ -48,44 +53,38 @@ class ListadoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_listado)
         //setSupportActionBar(toolbar)
         tvTitulo.typeface = Typeface.createFromAsset(assets, "fonts/CURSHT.TTF")
+        //bajaComida2()
 
-        bajaComida2()
+        if (comistrajos.size == 0) {
+            Log.i("comidas", "vacio")
+            btnRefrescar.isClickable = false
+            bajaComida2()
+        } else {
+            Log.i("comidas", "lleno")
+            setUpRecyclerView(comistrajos)
+        }
 
-
-        try{
-            bajaShared2()
-            Log.i("comida2",comistrajos.toString())
-        }catch (e:Exception){}
-        Log.i("comida2", comistrajos.toString())
-        aPintar()
-        Log.i("comida2", "2 $comiditas")
-
+        btnRefrescar.setOnClickListener {
+            setUpRecyclerView(comistrajos)
+        }
 
         btnAdd.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             startActivity(intent)
         }
-        fab2.setOnClickListener {
-            setUpRecyclerView(muestra)
-        }
-        fab3.setOnClickListener {
-            bajaComida2()
-            Log.i("comida2", comistrajos.toString())
-            aPintar()
-            Log.i("comida2", "2 $comiditas")
-
-        }
 
         btnComida.setOnClickListener {
             comistrajos.sortBy { it.comida }
+            setUpRecyclerView(comistrajos)
         }
         btnTipo.setOnClickListener {
             comistrajos.sortByDescending { it.comida }
+            setUpRecyclerView(comistrajos)
         }
         buscador()
     }
 
-    fun buscador(){
+    fun buscador() {
         searchV.setOnCloseListener {
             setUpRecyclerView(muestra)
             false
@@ -121,69 +120,6 @@ class ListadoActivity : AppCompatActivity() {
         searchV.setOnQueryTextListener(queryTextLis)
     }
 
-    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-
-        val searchView = menu?.findItem(R.id.app_bar_search)?.actionView as SearchView
-        searchView.setOnCloseListener {
-
-            setUpRecyclerView(muestra)
-            false
-        }
-        val queryTextListener = object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(textoEscrito: String?): Boolean {
-                //TODO Cuando se pulsa en el boton de buscar del teclado entra aqui
-                if (textoEscrito != null) {
-                    val muestraFiltro = muestra.filter {
-                        it.comida.contains(textoEscrito, true) || it.tipo.contains(
-                            textoEscrito,
-                            true
-                        )
-                    } as ArrayList<Comida>
-                    setUpRecyclerView(muestraFiltro)
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(textoEscrito: String?): Boolean {
-                //TODO Cada vez que escribimos una letra entra aqui
-
-                val muestraFiltro = muestra.filter {
-                    it.comida.contains(
-                        textoEscrito.toString(),
-                        true
-                    ) || it.tipo.contains(textoEscrito.toString(), true)
-                } as ArrayList<Comida>
-                setUpRecyclerView(muestraFiltro)
-                return false
-            }
-        }
-        searchView.setOnQueryTextListener(queryTextListener)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_add -> {
-                val intent = Intent(this, ListadoActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.calendario -> {
-                val intent = Intent(this, CalendarActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.listado -> {
-                val intent = Intent(this, ListadoActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.reglas -> {
-                val intent = Intent(this, ReglasActivity::class.java)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item!!)
-    }*/
-
     fun bajaComida2() = CoroutineScope(Dispatchers.IO).launch {
         arrayDocs.clear()
         arrayCom.clear()
@@ -196,7 +132,7 @@ class ListadoActivity : AppCompatActivity() {
         bajaComida3()
     }
 
-    fun bajaComida3() {
+    fun bajaComida3() = CoroutineScope(Dispatchers.IO).launch {
         for (i in 0 until arrayDocs.size) {
             DataManager.db.collection("comida").document(arrayDocs[i]).get()
                 .addOnSuccessListener { result ->
@@ -204,16 +140,16 @@ class ListadoActivity : AppCompatActivity() {
                     val a2 = result.get("comida").toString()
                     val a3 = result.get("tipo").toString()
                     val a4 = result.get("tiempo").toString().toInt()
-                    val af = Comida(a1, a2, a3, a4)
+                    val a5 = result.get("duplicable").toString().toBoolean()
+                    val af = Comida(a1, a2, a3, a4, a5)
                     Log.i("myapp", "$a1 $a2 $a3 $a4, ${af.id}")
                     arrayCom.add(af)
                 }
-
         }
-
         muestra = arrayCom
         comistrajos = arrayCom
-
+        btnRefrescar.isClickable = true
+        //shareInfoComida()
     }
 
     fun setUpRecyclerView(lista: ArrayList<Comida>) {
@@ -240,7 +176,7 @@ class ListadoActivity : AppCompatActivity() {
         id = emailId
     }
 
-    fun bajaShared2() {
+    fun bajaShared2() = CoroutineScope(Dispatchers.IO).launch {
         //Shared
         val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
 
@@ -250,16 +186,44 @@ class ListadoActivity : AppCompatActivity() {
         val listaComidas: List<Comida> = gson.fromJson(json, type)
         //muestra.addAll(listaComidas)
         comistrajos.addAll(listaComidas)
-        setUpRecyclerView(comistrajos)
+        Log.i("comidas", "funcion $listaComidas")
+        Log.i("comidas", "funcion $comistrajos")
+    }
 
+
+    fun shareInfoComida() {
+        //Shared
+        val sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        sharedPref?.edit()?.remove("listadoComida")?.apply()
+        val gson = Gson()
+        val json2 = gson.toJson(comistrajos)
+        editor.apply {
+            putString("listadoComida", json2)
+            apply()
+        }
     }
 
     fun aPintar() {
         comiditas.clear()
         comiditas.addAll(comistrajos)
-
         setUpRecyclerView(comiditas)
+    }
 
-
+    fun aPintar2() {
+        comiditas.clear()
+        for (i in 0..3) {
+            if (comistrajos.isNotEmpty()) {
+                comiditas.add(comistrajos[i])
+            }
+        }
+        for (i in 0..3) {
+            if (comiditas.isNotEmpty()) {
+                comiditas.remove(comiditas[0])
+            }
+        }
+        comiditas.addAll(comistrajos)
+        setUpRecyclerView(comiditas)
+        Log.i("comidas", "tonteria")
     }
 }

@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.DataManager.db
@@ -28,7 +30,7 @@ class ListadoAdapter2(var onComidaClick: (comida: Comida) -> Unit) :
         val item = lista[position]
         holder.bind(item, item)
         holder.btnDelete.setOnClickListener {
-            db.collection("comida").document(item.id).delete()
+            //db.collection("comida").document(item.id).delete()
         }
     }
 
@@ -60,6 +62,7 @@ class ListadoAdapter2(var onComidaClick: (comida: Comida) -> Unit) :
             itemView.setOnClickListener {
                 onComidaClick(item)
             }
+
         }
     }
 

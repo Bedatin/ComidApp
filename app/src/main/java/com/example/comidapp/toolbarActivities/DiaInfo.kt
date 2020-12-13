@@ -110,8 +110,14 @@ class DiaInfo : AppCompatActivity() {
                     calendarioNuevo[i] = nuevo
                 }
             }
-            shareInfo(true)
-            enviaInfo()
+            if (etComida.text.isEmpty() && etCena.text.isEmpty()){
+                shareInfo(false)
+                val intent = Intent(this, CalendarActivity::class.java)
+                startActivity(intent)
+            }else{
+                shareInfo(true)
+                enviaInfo()
+            }
             /*val intent = Intent(this, CalendarActivity::class.java)
             intent.putExtra("cambios", true)
             startActivity(intent)*/
@@ -121,6 +127,7 @@ class DiaInfo : AppCompatActivity() {
 
     override fun onBackPressed() {
         //super.onBackPressed()
+        shareInfo(false)
         val intent = Intent(this, CalendarActivity::class.java)
         startActivity(intent)
         finish()

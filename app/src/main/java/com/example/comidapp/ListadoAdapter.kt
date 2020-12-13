@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.comidapp.DataManager.db
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
+val comidaRef = Firebase.firestore.collection("comida")
 
 class ListadoAdapter(var onComidaClick: (comida: Comida) -> Unit) :
     RecyclerView.Adapter<ListadoAdapter.ViewHolder>() {
@@ -46,6 +50,7 @@ class ListadoAdapter(var onComidaClick: (comida: Comida) -> Unit) :
         val tvTipo = view.findViewById(R.id.tvTipo) as TextView
         val tvTiempo = view.findViewById(R.id.tvTiempo) as TextView
         val btnDelete = view.findViewById(R.id.btnDelete) as Button
+        val ivDupli = view.findViewById(R.id.ivDupli) as ImageView
 
 
         @SuppressLint("SetTextI18n")
@@ -59,6 +64,13 @@ class ListadoAdapter(var onComidaClick: (comida: Comida) -> Unit) :
             }
             itemView.setOnClickListener {
                 onComidaClick(item)
+            }
+            btnDelete.setOnClickListener {
+                //db.collection("comida").document(item.id).delete()
+                comidaRef.document(item.id).delete()
+            }
+            if(listita.duplicable){
+                ivDupli.setImageResource(R.drawable.ic_check)
             }
         }
     }

@@ -6,5 +6,6 @@ class Comida (
     var id: String = "",
     var comida: String ="",
     var tipo: String ="",
-    var tiempo: Int =0
+    var tiempo: Int =0,
+    var duplicable: Boolean = false
         ):Serializable

@@ -7,17 +7,22 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.comidapp.toolbarActivities.CalendarActivity
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDateTime
 
+const val TOPIC = "/topics/Maison"
 
 class MainActivity : AppCompatActivity() {
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //No subscribir a todo el mundo
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+
 
         cuadrado.setInAnimation(this, android.R.anim.fade_in)
         cuadrado.setOutAnimation(this, android.R.anim.fade_out)

@@ -14,7 +14,7 @@
         android:id="@+id/tvComida"
         android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:textColor="#010"
         android:textSize="12sp"
@@ -24,7 +24,7 @@
         android:id="@+id/tvTipo"
         android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:textColor="#010"
         android:textSize="12sp"
@@ -34,17 +34,23 @@
         android:id="@+id/tvTiempo"
         android:layout_width="70dp"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:textColor="#010"
         android:textSize="12sp"
         toolsNs:text="Ambas" />
 
+    <ImageView
+        android:id="@+id/ivDupli"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="5dp" />
+
     <Button
         android:id="@+id/btnDelete"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:background="@drawable/ic_delete" />
 </LinearLayout>
 
